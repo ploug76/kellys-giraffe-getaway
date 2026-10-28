@@ -300,17 +300,17 @@ const THEMES=[
  {name:'fort',sky:['#1a0e22','#3a1428','#7a2a2a'],sun:'#ff9a4a',far:'#3a1a22',near:'#24101a',tree:'#120810',grass:'#9a5a3a',grass2:'#6a3420',dirt:'#4a2a22',dirt2:'#301a16',brick:'#9a3a22',brick2:'#601e10',stone:'#6a5a5a',stone2:'#463a3c',plank:'#7a4a2a',water:'#5a2a8a'},
 ];
 const LEVELS=[
- {name:'Sunny Savanna',theme:0,spd:0.8,tune:0,foot:true,chunks:['start','sign:Oh no! Cackles the Hyena King captured Gigi the giraffe! Help Kelly find a friend to rescue her.','sign:JUMP to hop (hold for higher). Tap KICK to kick hyenas. Stomping works too!','flat','steps','pit','sign:Porcupines are prickly! Kick them, never stomp them.','porc','feast','cp','vult','thorns','sign:Coconut monkey! Hop up on the rocks and kick him.','monkey','pit','sign:Somebody is stuck in that pen up ahead... walk into it to set them free!','pen']},
- {name:'Acacia Grove',theme:1,spd:0.85,tune:1,chunks:['start','sign:Kelly is riding Jinxy now! Double-tap NECK to RAM. Hold UP or UP+forward to aim the ram.','wall','sign:Leaves up high? Double-tap NECK (or JUMP) near food and Jinxy\'s tongue eats it!','tree','flat','cp','sign:Gap too wide? JUMP, then tap JUMP again near a hook. Jinxy bites it and SWINGS. Tap JUMP to let go!','swing1','sign:Gems up top? Hold UP and double-tap NECK to ram straight up.','ramup','sign:Cliff! Bite the hook, then hold UP to pull up onto the ledge. Bumped off Jinxy? Touch her to climb back on.','cliff','steps','swing2','end']},
+ {name:'Sunny Savanna',theme:0,spd:0.8,tune:0,foot:true,chunks:['start','sign:Oh no! Cackles the Hyena King captured Gigi the giraffe! Help Kelly find a friend to rescue her.','sign:JUMP to hop (hold for higher). Tap ACTION to PUNCH, tap it twice fast to KICK! Stomping hyenas works too.','flat','steps','pit','sign:Porcupines are prickly! Punch or kick them with ACTION, never stomp them.','porc','feast','cp','vult','thorns','sign:Coconut monkey! Hop up on the rocks and punch him with ACTION.','monkey','pit','sign:Somebody is stuck in that pen up ahead... walk into it to set them free!','pen']},
+ {name:'Acacia Grove',theme:1,spd:0.85,tune:1,chunks:['start','sign:Kelly is riding Jinxy now! Double-tap ACTION to NECK RAM. Hold UP (or UP+forward) and tap ACTION to ram upward.','wall','sign:Leaves up high? Tap ACTION near food and Jinxy\'s tongue eats it!','tree','flat','cp','sign:Gap too wide? JUMP, then tap ACTION near a sparkly hook. Jinxy bites it and SWINGS. Tap JUMP to let go!','swing1','sign:Gems up top? Hold UP and tap ACTION to ram straight up.','ramup','sign:Cliff! Tap ACTION by the hook to bite it, then hold UP to pull up onto the ledge. Bumped off Jinxy? Touch her to climb back on.','cliff','steps','swing2','end']},
  {name:'Watering Hole',theme:2,spd:0.9,tune:0,chunks:['start','flat','water','vult','cp','swing2','tree','pit','water','feast','end']},
- {name:'Termite Mounds',theme:3,spd:0.95,tune:1,chunks:['start','wall','mound','sign:In the air, hold DOWN and double-tap NECK to NECK-POUND through bricks below!','drop','cp','ramup','mound','porc','wall','end']},
+ {name:'Termite Mounds',theme:3,spd:0.95,tune:1,chunks:['start','wall','mound','sign:In the air, hold DOWN and tap ACTION to NECK-POUND through bricks below!','drop','cp','ramup','mound','porc','wall','end']},
  {name:'Sunset Canyon',theme:4,spd:1,tune:0,chunks:['start','cliff','monkey','pit','cp','swing1','thorns','cliff','vult','feast','end']},
  {name:'Baobab Jungle',theme:5,spd:1.05,tune:1,chunks:['start','swing2','monkey','tree','cp','swing2','mound','swing1','monkey','end']},
  {name:'Thorny Night Plains',theme:6,spd:1.1,tune:2,chunks:['start','thorns','porc','water','cp','thorns','vult','wall','swing2','feast','end']},
  {name:'Kilimanjaro Climb',theme:7,spd:1.15,tune:0,chunks:['start','cliff','thorns','monkey','cp','swing2','cliff','mound','water','cp','vult','swing1','end']},
- {name:"Hyena King's Hideout",theme:8,spd:1.2,tune:2,boss:true,chunks:['start','porc','swing1','cp','monkey','thorns','cp','sign:Cackles the Hyena King is guarding Gigi! RAM him or stomp him. Watch out for his bones!','boss','finale']},
- {name:'The Big Chase',theme:9,spd:1.3,tune:1,bonus:1,chase:true,chunks:['start','sign:BONUS ROUND! The Snickers Gang grabbed Peter and threw him in a wagon! Chase it, Kelly!','flat','rocks','pit','vult','sign:Watch the shaking rocks! Keep moving, or RAM them to smash them.','cp','swing3','monkey','rockpit','thorns','cp','rocks','mound','swing2','porc','vult','end']},
- {name:"Tusk's Fortress",theme:10,spd:1.38,tune:2,bonus:2,boss:true,peter:true,chunks:['start','sign:The wagon went into Big Tusk\'s fortress! Get through his gauntlet to save Peter!','rocks','thorns','monkey','cp','swing3','rockpit','wall','vult','porc','cp','rocks','swing2','sign:BIG TUSK THE WARTHOG! Jump his charge, then RAM or stomp him. When he stomps, jump the shockwaves!','tusk','pfinale']},
+ {name:"Hyena King's Hideout",theme:8,spd:1.2,tune:2,boss:true,chunks:['start','porc','swing1','cp','monkey','thorns','cp','sign:Cackles the Hyena King is guarding Gigi! RAM him (double-tap ACTION) or stomp him. Watch out for his bones!','boss','finale']},
+ {name:'The Big Chase',theme:9,spd:1.3,tune:1,bonus:1,chase:true,chunks:['start','sign:BONUS ROUND! The Snickers Gang grabbed Peter and threw him in a wagon! Chase it, Kelly!','flat','rocks','pit','vult','sign:Watch the shaking rocks! Keep moving, or RAM them (double-tap ACTION) to smash them.','cp','swing3','monkey','rockpit','thorns','cp','rocks','mound','swing2','porc','vult','end']},
+ {name:"Tusk's Fortress",theme:10,spd:1.38,tune:2,bonus:2,boss:true,peter:true,chunks:['start','sign:The wagon went into Big Tusk\'s fortress! Get through his gauntlet to save Peter!','rocks','thorns','monkey','cp','swing3','rockpit','wall','vult','porc','cp','rocks','swing2','sign:BIG TUSK THE WARTHOG! JUMP his charge, then RAM him (double-tap ACTION) or stomp him. When he stomps, jump the shockwaves!','tusk','pfinale']},
 ];
 const BONUS0=9;
 
@@ -359,13 +359,13 @@ function layoutCtl(){
   CTL.dpad={x:SAFE.l+16+r,y:cy,r};
   const br=clamp(W*0.105,36,46);
   CTL.A={x:W-SAFE.r-16-br,y:cy-br*0.45,r:br,lbl:'JUMP'};
-  CTL.B={x:W-SAFE.r-16-br*3.3,y:cy+br*0.45,r:br,lbl:'NECK'};
+  CTL.B={x:W-SAFE.r-16-br*3.3,y:cy+br*0.45,r:br,lbl:'ACTION'};
  }else{
   const r=clamp(H*0.17,52,80);const cy=H-SAFE.b-r-14;
   CTL.dpad={x:SAFE.l+18+r,y:cy,r};
   const br=clamp(H*0.11,36,46);
   CTL.A={x:W-SAFE.r-18-br,y:H-SAFE.b-br-16-br*0.5,r:br,lbl:'JUMP'};
-  CTL.B={x:W-SAFE.r-18-br*3.3,y:H-SAFE.b-br-16+br*0.35,r:br,lbl:'NECK'};
+  CTL.B={x:W-SAFE.r-18-br*3.3,y:H-SAFE.b-br-16+br*0.1,r:br,lbl:'ACTION'};
  }
 }
 const KEY={},TOUCH=new Map(),VIRT={};let PAD={};
@@ -392,7 +392,7 @@ function onDown(id,x,y){AU.unlock();
  if(state==='play'){
   if(inBtn(CTL.pause,x,y)){pauseGame();return}
   if(inBtn(CTL.mute,x,y)){toggleMute();return}
-  const z=zoneAt(x,y);if(Object.keys(z).length||portrait&&y>gameH-10){TOUCH.set(id,{x,y,z});return}
+  const z=zoneAt(x,y);if(Object.keys(z).length||portrait&&y>gameH-10){TOUCH.set(id,{x,y,z});if(z.J)VIRT.J=Math.max(VIRT.J||0,1);if(z.A)VIRT.A=Math.max(VIRT.A||0,1);return}// a very quick tap still counts for one frame
   if(state==='play'&&G&&G.signT>0)G.signDismiss=1;
   return}
  tapStart={x,y,id}}
@@ -420,7 +420,7 @@ function readInput(){readPad();for(const k in IN)PREV[k]=IN[k];
  const k=KEY;const t={};for(const v of TOUCH.values())for(const z in v.z)t[z]=1;
  for(const n in VIRT){if(VIRT[n]>0){t[n]=1;VIRT[n]--}}
  IN.L=+(!!(k.arrowleft||k.a||t.L||PAD.L));IN.R=+(!!(k.arrowright||k.d||t.R||PAD.R));IN.U=+(!!(k.arrowup||k.w||t.U||PAD.U));IN.D=+(!!(k.arrowdown||k.s||t.D||PAD.D));
- IN.J=+(!!(k[' ']||k.z||k.j||t.J||PAD.J));IN.A=+(!!(k.x||k.k||t.A||PAD.A));IN.RAM=+(!!(k.c||t.RAM));IN.GRAB=+(!!(k.v||t.GRAB));
+ IN.J=+(!!(k[' ']||k.z||k.j||t.J||PAD.J));IN.A=+(!!(k.x||k.k||t.A||PAD.A));IN.RAM=+(!!k.c);IN.GRAB=+(!!k.v);// old shortcuts, keyboard only
  for(const n in IN)PR[n]=IN[n]&&!PREV[n];
  if(PAD.ST&&!padST){if(state==='play')pauseGame();else if(state==='pause')resumeGame();else menuKey()}padST=PAD.ST||0;
 }
@@ -428,7 +428,7 @@ function readInput(){readPad();for(const k in IN)PREV[k]=IN[k];
 // ===== sound (WebAudio chiptune; mute remembered) =====
 const AU=(()=>{let ac=null,master=null,mus=null,musGain=null,tune=-1,step=0,nextT=0,timer=null;
  const muted=()=>!!save.muted;
- function unlock(){if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted()?0:0.5;master.connect(ac.destination);musGain=ac.createGain();musGain.gain.value=0.32;musGain.connect(master)}catch(e){return}}if(ac.state==='suspended')ac.resume();if(tune>=0&&!timer)startSeq()}
+ function unlock(){if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted()?0:0.5;master.connect(ac.destination);musGain=ac.createGain();musGain.gain.value=0.32;musGain.connect(master)}catch(e){return}}if(ac.state==='suspended'){const pr=ac.resume();if(pr&&pr.catch)pr.catch(()=>{})}if(tune>=0&&!timer)startSeq()}
  function tone(f,d,type='square',v=0.25,slide=0,dest){if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f*slide),t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(dest||master);o.start(t);o.stop(t+d+0.02)}
  function noise(d,v=0.3,hp=800){if(!ac)return;const t=ac.currentTime,n=ac.createBufferSource(),bf=ac.createBuffer(1,Math.max(1,ac.sampleRate*d|0),ac.sampleRate),dt=bf.getChannelData(0);for(let i=0;i<dt.length;i++)dt[i]=Math.random()*2-1;n.buffer=bf;const fl=ac.createBiquadFilter();fl.type='highpass';fl.frequency.value=hp;const g=ac.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);n.connect(fl);fl.connect(g);g.connect(master);n.start(t)}
  const seq=(notes,dt,type='square',v=0.2)=>notes.forEach((f,i)=>setTimeout(()=>tone(f,dt*1.4,type,v),i*dt*1000));
@@ -453,7 +453,7 @@ const AU=(()=>{let ac=null,master=null,mus=null,musGain=null,tune=-1,step=0,next
    if(l)note(mf(l),dt*1.6,'square',0.09,nextT);if(bs)note(mf(bs),dt*1.8,'triangle',0.2,nextT);step++;nextT+=dt}}
  function note(f,d,type,v,t){const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(musGain);o.start(t);o.stop(t+d+0.02)}
  return{unlock,sfx:n=>{try{if(ac&&!muted()&&S[n])S[n]()}catch(e){}},music:n=>{if(n===tune)return;tune=n;stopSeq();if(n>=0&&ac)startSeq()},
-  setMuted:m=>{if(master)master.gain.value=m?0:0.5},suspend:()=>{try{ac&&ac.suspend()}catch(e){}},resume:()=>{try{ac&&ac.resume()}catch(e){}}}})();
+  setMuted:m=>{if(master)master.gain.value=m?0:0.5},suspend:()=>{try{const pr=ac&&ac.suspend();if(pr&&pr.catch)pr.catch(()=>{})}catch(e){}},resume:()=>{try{const pr=ac&&ac.resume();if(pr&&pr.catch)pr.catch(()=>{})}catch(e){}}}})();
 function toggleMute(){save.muted=!save.muted;persist();AU.setMuted(save.muted);if(!save.muted)AU.sfx('sel')}
 
 // ===== world =====
@@ -578,14 +578,13 @@ function updatePlayer(){const p=P;p.anim++;if(p.inv>0)p.inv--;if(p.super>0)p.sup
  if(p.ramT>0&&p.ramDir.y===0&&p.ground){const ph=20-p.ramT;p.vx=ph<12?p.f*3.3:p.vx*0.85}
  else if(dir&&!p.tongue){const acc=p.ground?0.2:0.13;p.vx+=dir*acc;if(Math.abs(p.vx)>maxv)p.vx=Math.sign(p.vx)*Math.max(maxv,Math.abs(p.vx)-0.25);if(!p.ramT)p.f=dir}
  else{p.vx*=p.ground?0.76:0.97;if(Math.abs(p.vx)<0.05)p.vx=0}
- if(PR.J){if(frame-p.lastJ<=DTW&&p.ride&&!(p.ground&&frame-p.lastJ<3)){p.lastJ=-99;neckGrab()}
-  else{p.lastJ=frame;if(p.ground||p.coyote>0)doJump();else p.jbuf=7}}
+ if(PR.J){p.lastJ=frame;if(p.ground||p.coyote>0)doJump();else p.jbuf=7}
  else if(p.jbuf>0){p.jbuf--;if(p.ground)doJump()}
  if(PR.GRAB&&p.ride)neckGrab();
  if(!IN.J&&p.jhold&&p.vy<-2){p.vy*=0.5;p.jhold=false}
  if(p.vy>=0)p.jhold=false;
- if(PR.A){if(frame-p.lastA<=DTW&&p.ride){p.lastA=-99;special()}else{p.lastA=frame;whip()}}
- if(PR.RAM&&p.ride)special();
+ if(PR.A)action();
+ if(PR.RAM&&p.ride&&!p.tongue&&!p.ramT)special();
  if(p.pound){p.vy=6.8}else{const g=(p.ramT>0&&p.ramDir.y<0)?0.12:(p.ramT>0&&!p.ground&&p.ramDir.y===0?0.15:0.34);p.vy=Math.min(p.vy+g,6.5)}
  const wasG=p.ground;const res=moveBody(p);
  p.ground=res.ground||(p.vy===0&&onGroundCheck(p));
@@ -608,12 +607,28 @@ function hazards(p){const c0=Math.floor((p.x+2)/TS),c1=Math.floor((p.x+p.w-2)/TS
   if(t==='^'&&p.y+p.h>r*TS+7){if(p.inv<=0&&!p.super){p.vy=-5.5;p.ground=false;hurt(null)}}
   if(t==='w'&&p.y+p.h>r*TS+5){splash(p);pitFall();return}}}
 function splash(p){for(let i=0;i<10;i++)G.parts.push({x:cxOf(p)+rnd(-8,8),y:p.y+p.h-4,vx:rnd(-1.5,1.5),vy:rnd(-4,-1.5),t:30,col:'#bfe6ff',g:0.22,s:3});AU.sfx('splash')}
-function whip(){const p=P;if(p.ramT||p.tongue||p.whipT)return;p.whipT=14;AU.sfx('whip')}
-function whipBox(p){const ph=14-p.whipT;if(p.whipT<=0||ph<2||ph>10)return null;
- if(!p.ride)return{x:p.f>0?cxOf(p)+2:cxOf(p)-20,y:p.y+8,w:18,h:16};
+function whip(){const p=P;if(p.ramT||p.tongue||p.whipT)return;p.whipT=p.whipMax=14;p.atk='neck';AU.sfx('whip')}
+// ===== the ACTION button: one button, the move depends on what's around Kelly =====
+// On foot: tap = PUNCH, a quick 2nd tap = KICK.
+// Riding Jinxy: in the air hold DOWN = NECK POUND; in the air near a sparkling hook = bite it and SWING;
+// near food = TONGUE (on the ground food comes before the hook); hold UP = NECK RAM upward; double-tap = NECK RAM; otherwise a quick head-bonk.
+function action(){const p=P;const dbl=frame-p.lastA<=DTW;p.lastA=dbl?-99:frame;
+ if(!p.ride){footAttack(dbl);return}
+ if(p.tongue||p.ramT)return;
+ if(IN.D&&!p.ground){special();return}
+ const hk=findHook();if(hk&&!p.ground){grabHook(hk);return}
+ if(tryTongue())return;
+ if(hk&&!foeClose(p)){grabHook(hk);return}
+ if(IN.U||dbl){special();return}
+ whip()}
+function footAttack(dbl){const p=P;
+ if(dbl&&p.atk==='punch'){p.whipT=p.whipMax=16;p.atk='kick';AU.sfx('whip');return}
+ if(p.whipT>0)return;p.whipT=p.whipMax=11;p.atk='punch';AU.sfx('whip')}
+function foeClose(p){for(const e of LV.ents)if(e.alive&&e.foe&&Math.abs(cxOf(e)-cxOf(p))<44&&Math.abs(cyOf(e)-cyOf(p))<30)return true;return false}
+function whipBox(p){const mx=p.whipMax||14,ph=mx-p.whipT;if(p.whipT<=0||ph<2||ph>mx-4)return null;
+ if(!p.ride){if(p.atk==='punch')return{x:p.f>0?cxOf(p)+2:cxOf(p)-16,y:p.y+6,w:14,h:12};return{x:p.f>0?cxOf(p)+2:cxOf(p)-20,y:p.y+8,w:18,h:16}}
  return{x:p.f>0?cxOf(p)+2:cxOf(p)-28,y:p.y-4,w:26,h:22}}
 function special(){const p=P;if(p.tongue||p.ramT)return;p.whipT=0;
- if(tryTongue())return;
  let dx=p.f,dy=0;
  if(IN.U){dy=-1;dx=(IN.L||IN.R)?p.f:0}else if(IN.D&&!p.ground){dy=1;dx=0}
  const m=Math.hypot(dx,dy);p.ramDir={x:dx/m,y:dy/m};p.ramT=20;p.ramLen=0;p.ramHit={};p.ramStop=false;AU.sfx('ram');
@@ -651,14 +666,18 @@ function eat(e){e.alive=false;const x=cxOf(e),y=cyOf(e);AU.sfx('munch');G.eaten=
  if(e.type==='leaf'){addScore(50,x,y);if(G.hearts<3){G.hearts++;G.pops.push({x,y:y-12,t:50,txt:'♥+1'})}}
  else if(e.type==='mango'){addScore(250,x,y);G.hearts=3}
  else if(e.type==='star'){addScore(500,x,y);P.super=480;AU.sfx('power');G.pops.push({x,y:y-12,t:70,txt:'SUPER!'})}}
-function neckGrab(){const p=P;if(p.swing||p.tongue||!p.ride)return;p.ramT=0;p.pound=false;
- const cx=cxOf(p),cy=cyOf(p);let best=null,bs=1e9;const dir=(IN.R?1:0)-(IN.L?1:0);
+// the nearest bite-hook in reach (the same hooks that sparkle on screen)
+function findHook(){const p=P;if(p.swing||!p.ride)return null;const cx=cxOf(p),cy=cyOf(p);let best=null,bs=1e9;const dir=(IN.R?1:0)-(IN.L?1:0);
  for(const a of LV.anchors){if(a===p.noGrab)continue;const dx=a.x-cx,dy=a.y-cy;if(dy>-6)continue;const d=Math.hypot(dx,dy);if(d>REACH)continue;
   let sc=d;if(dir&&Math.sign(dx)===dir)sc-=30;if(!dir&&Math.sign(dx)===p.f)sc-=10;if(sc<bs){bs=sc;best=a}}
- if(best){const dx=cx-best.x,dy=cy-best.y,d=Math.hypot(dx,dy);const L=clamp(d,34,REACH);const th=Math.atan2(dx,dy);
-  const om=(p.vx*Math.cos(th)-p.vy*Math.sin(th))/L;
-  p.swing={a:best,L,th,om,t:0};p.vx=p.vy=0;p.whipT=0;G.grabs=(G.grabs||0)+1;AU.sfx('grab');G.parts.push({x:best.x,y:best.y,vx:0,vy:0,t:10,col:'#fff',g:0,s:3});return}
- if(tryTongue())return;
+ return best}
+function grabHook(best){const p=P;p.ramT=0;p.pound=false;const cx=cxOf(p),cy=cyOf(p);
+ const dx=cx-best.x,dy=cy-best.y,d=Math.hypot(dx,dy);const L=clamp(d,34,REACH);const th=Math.atan2(dx,dy);
+ const om=(p.vx*Math.cos(th)-p.vy*Math.sin(th))/L;
+ p.swing={a:best,L,th,om,t:0};p.vx=p.vy=0;p.whipT=0;G.grabs=(G.grabs||0)+1;AU.sfx('grab');G.parts.push({x:best.x,y:best.y,vx:0,vy:0,t:10,col:'#fff',g:0,s:3})}
+// V key (old shortcut): hook, else tongue, else a reach
+function neckGrab(){const p=P;if(p.swing||p.tongue||!p.ride)return;const hk=findHook();if(hk){grabHook(hk);return}
+ if(tryTongue())return;const dir=(IN.R?1:0)-(IN.L?1:0);
  p.reach=14;p.reachDir={x:dir?dir*0.6:p.f*0.35,y:-0.9};AU.sfx('whiff')}
 function updSwing(){const p=P,s=p.swing;s.t++;const g=0.34;
  const dir=(IN.R?1:0)-(IN.L?1:0);
@@ -673,7 +692,7 @@ function updSwing(){const p=P,s=p.swing;s.t++;const g=0.34;
  if(IN.U&&s.L<=32){for(const sd of [p.f,-p.f]){for(const rr of [s.a.r,s.a.r+1]){const c=s.a.c+sd;const t=tileAt(c,rr);
    if((SOLID.has(t)||t==='=')&&!isSolid(c,rr-1)&&!isSolid(c,rr-2)){const tx=c*TS+(sd>0?1:TS-p.w-1),ty=rr*TS-p.h;
     if(!boxHits(tx,ty,p.w,p.h)){p.x=tx;p.y=ty;p.vx=sd*0.5;p.vy=0;p.f=sd;p.swing=null;p.ground=true;G.mantles=(G.mantles||0)+1;AU.sfx('mantle');p.noGrab=s.a;p.noGrabT=30;return}}}}}
- if(PR.A){p.lastA=frame;whip()}if(p.whipT>0)p.whipT--;
+ if(PR.A){p.lastA=frame;whip()}if(p.whipT>0)p.whipT--;// JUMP lets go
  if(PR.J||PR.GRAB){const vt=s.L*s.om;p.vx=clamp(vt*Math.cos(s.th),-5,5);p.vy=Math.min(-vt*Math.sin(s.th)-1.5,-5.4);if(Math.abs(p.vx)>0.5)p.f=Math.sign(p.vx);
   p.swing=null;p.noGrab=s.a;p.noGrabT=14;p.lastJ=frame;p.jhold=false;p.ground=false;AU.sfx('jump');return}
  hazards(p)}
@@ -799,8 +818,13 @@ function levelClear(){if(G.cleared)return;G.cleared=true;state='clear';AU.music(
  const k='L'+G.lvl;save.gems[k]=Math.max(save.gems[k]||0,G.lvGems);save.reached=Math.max(save.reached,Math.min(LEVELS.length-1,G.lvl+1));save.best=Math.max(save.best,G.score);
  save.cont={lvl:Math.min(LEVELS.length-1,G.lvl+1),score:G.score,lives:G.lives};persist()}
 function updateCam(snap){const p=P;const target=cxOf(p)-BW*(LV.L.chase?0.3:0.42)+p.f*18;G.camX=snap?target:G.camX+(target-G.camX)*0.12;
- if(LV.w*TS<=BW)G.camX=(LV.w*TS-BW)/2;else G.camX=clamp(G.camX,0,LV.w*TS-BW);
+ const m=camMargins();if(LV.w*TS<=BW)G.camX=(LV.w*TS-BW)/2;else G.camX=clamp(G.camX,-m.l,LV.w*TS-BW+m.r);
+ if(m.l||m.r)G.camX=clamp(G.camX,p.x+p.w+m.r-BW,p.x-m.l);// landscape: Kelly never sits under the d-pad or the buttons
  const top=LPX-BH;if(top<=0)G.camY=top;else{const ty=clamp(cyOf(p)-BH*0.5,Math.min(0,p.y-40),top);G.camY=snap?ty:G.camY+(ty-G.camY)*0.15}}
+// landscape: the d-pad and the JUMP/ACTION buttons sit over the world, so the camera may show
+// a stone wall past each level edge; Kelly (and the start / goal) never hide under a button
+function camMargins(){if(portrait)return{l:0,r:0};const d=CTL.dpad,bl=Math.min(CTL.A.x-CTL.A.r,CTL.B.x-CTL.B.r);
+ return{l:Math.max(0,(d.x+d.r+10-SAFE.l)/S),r:Math.max(0,(W-bl+10)/S)}}
 function updatePlay(){G.time++;updatePlayer();if(state!=='play')return;updEnemies();updateCam();
  let near=null;for(const s of LV.signs)if(Math.abs(s.x+8-cxOf(P))<44&&Math.abs(s.y-P.y)<64)near=s;
  if(near){G.sign=near;G.signT=Math.min(G.signT+1,20)}else if(G.signT>0){G.signT--}
@@ -827,8 +851,9 @@ function drawKelly(cx,bot,f,o={}){const t=bot-24;const walk=o.walk||0;const ph=M
  RF(cx,f,0,t+10,3,1,SKIN_D);
  // top (black like her photo) with a pink scarf
  RF(cx,f,-4,t+11,8,7,'#1d1d24');RF(cx,f,-3,t+11,6,2,PK);RF(cx,f,-1,t+13,2,1,PK_D);
- const sw=o.kick?0:(ph===1?1:ph===3?-1:0);
- if(o.kick){RF(cx,f,3,t+12,5,2,'#1d1d24');RF(cx,f,8,t+12,1,2,SKIN)}else{RF(cx,f,-5+sw,t+12,2,5,'#1d1d24');RF(cx,f,-5+sw,t+17,2,1,SKIN);RF(cx,f,3-sw,t+12,2,5,'#2a2a32');RF(cx,f,3-sw,t+17,2,1,SKIN)}
+ const sw=(o.kick||o.punch)?0:(ph===1?1:ph===3?-1:0);
+ if(o.punch){const e=o.punch;RF(cx,f,-5,t+12,2,5,'#1d1d24');RF(cx,f,-5,t+17,2,1,SKIN);RF(cx,f,3,t+12,e,2,'#1d1d24');RF(cx,f,3+e,t+11,3,3,SKIN);RF(cx,f,3+e,t+11,3,1,'#fff0e0')}
+ else if(o.kick){RF(cx,f,3,t+12,5,2,'#1d1d24');RF(cx,f,8,t+12,1,2,SKIN)}else{RF(cx,f,-5+sw,t+12,2,5,'#1d1d24');RF(cx,f,-5+sw,t+17,2,1,SKIN);RF(cx,f,3-sw,t+12,2,5,'#2a2a32');RF(cx,f,3-sw,t+17,2,1,SKIN)}
  if(seat){RF(cx,f,-1,t+18,6,3,'#3a5a9a');RF(cx,f,3,t+20,2,4,'#3a5a9a');RF(cx,f,3,t+24,3,2,'#6a3a18');return}
  // legs (jeans) + boots
  let l1=0,l2=0;if(o.air){l1=-1;l2=1}else if(walk){l1=ph===1?-2:ph===3?2:0;l2=-l1}
@@ -886,7 +911,7 @@ function headPos(p){const cx=cxOf(p),bot=p.y+p.h,f=p.f,sh={x:cx+f*GSH.x,y:bot-GS
  if(p.ramT>0&&p.ramLen>0){const bs=ramBase(p);return{x:bs.x+p.ramDir.x*p.ramLen,y:bs.y+p.ramDir.y*p.ramLen}}
  if(p.tongue){const e=p.tongue.e;const m={x:cx+f*GHD.x,y:bot-GHD.y};const d=Math.hypot(cxOf(e)-m.x,cyOf(e)-m.y);const k=Math.min(0.5,30/(d||1))*Math.min(1,p.tongue.t/5);return{x:m.x+(cxOf(e)-m.x)*k,y:m.y+(cyOf(e)-m.y)*k}}
  if(p.reach>0){const k=Math.sin((14-p.reach)/14*Math.PI)*26;return{x:sh.x+p.reachDir.x*(10+k),y:sh.y+p.reachDir.y*(10+k)}}
- if(p.whipT>0){const ph=(14-p.whipT)/14;const a=(1-Math.sin(ph*Math.PI))*1.25;return{x:sh.x+f*Math.cos(a)*16,y:sh.y-Math.sin(a)*16}}
+ if(p.whipT>0){const mx=p.whipMax||14,ph=(mx-p.whipT)/mx;const a=(1-Math.sin(ph*Math.PI))*1.25;return{x:sh.x+f*Math.cos(a)*16,y:sh.y-Math.sin(a)*16}}
  if(p.crouch)return{x:cx+f*11,y:bot-10};return{x:cx+f*GHD.x,y:bot-GHD.y}}
 function drawPlayer(){const p=P;if(p.inv>0&&(p.inv>>2)%2&&state==='play')return;
  const cx=cxOf(p),bot=p.y+p.h,moving=Math.abs(p.vx)>0.2&&p.ground;
@@ -895,7 +920,9 @@ function drawPlayer(){const p=P;if(p.inv>0&&(p.inv>>2)%2&&state==='play')return;
   const pal=p.super>0?{...JINXY,body:['#eec98a','#ffe040','#ffb0d8','#a0e0ff'][(frame>>3)%4]}:JINXY;
   drawGiraffe(cx,bot,p.f,pal,{walk:moving?p.anim:0,air:!p.ground&&!p.swing,crouch:p.crouch,head:hd,tongueTo,chomp:!!p.swing});
   drawKelly(cx-p.f*3,bot-12,p.f,{seat:1,walk:0,kick:false})}
- else drawKelly(cx,bot,p.f,{walk:moving?p.anim:0,air:!p.ground,kick:p.whipT>0,kickLeg:p.whipT>0&&!p.ground});
+ else{const atk=p.whipT>0?p.atk:'';const ph=p.whipT>0?(p.whipMax||14)-p.whipT:0;
+  drawKelly(cx,bot,p.f,{walk:moving&&!atk?p.anim:0,air:!p.ground,punch:atk==='punch'?(ph<2?2:ph<7?7:4):0,kick:atk==='kick',kickLeg:atk==='kick'&&ph>=2&&ph<13});
+  if(atk&&ph>=3&&ph<=6){const fx=cx+p.f*(atk==='punch'?16:15),fy=bot-(atk==='punch'?11:5);R(fx-1,fy-3,2,2,'#fff');R(fx+2,fy-1,2,2,'#fff');R(fx-1,fy+2,2,2,'#fff');R(fx-4,fy-1,2,2,'#fff')}}
  b.globalAlpha=1;
  if(p.super>0&&frame%3===0)G.parts.push({x:cx+rnd(-8,8),y:p.y+rnd(0,p.h),vx:0,vy:-0.5,t:14,col:['#fff060','#ff70c0','#60d0ff'][frame%3],g:0,s:2})}
 function drawJinxyNPC(gi){const moving=Math.abs(gi.vx)>0.2;if(gi.scared>0&&(frame>>3)%2)R(cxOf(gi)-1,gi.y-12,2,5,'#fff');drawGiraffe(cxOf(gi),gi.y+gi.h,gi.f||1,JINXY,{walk:moving?gi.t*2:0})}
@@ -914,8 +941,8 @@ function drawBG(camX,camY,T){T=T||(LV?LV.theme:THEMES[0]);const sky=T.sky;const 
  b.fillStyle=T.near;for(let x=0;x<BW;x+=2){const wx=x+camX*0.45;const hh=22+Math.sin(wx*0.035)*8;b.fillRect(x,(gy-48-hh)|0,2,(hh+48)|0)}
  b.fillStyle=T.tree;const off=camX*0.45;for(let i=Math.floor(off/150)-1;i<Math.floor((off+BW)/150)+2;i++){const x=i*150-off+hash(i,5)*60,base=gy-48-24;if(T.name==='snow'){b.fillRect(x|0,(base-30)|0,3,30);continue}
   b.fillRect((x)|0,(base-26)|0,3,26);b.fillRect((x-14)|0,(base-30)|0,31,4);b.fillRect((x-9)|0,(base-33)|0,21,3);b.fillRect((x-4)|0,(base-28)|0,2,3)}}
-function drawTiles(){const T=LV.theme;const c0=Math.max(0,Math.floor(G.camX/TS)),c1=Math.min(LV.w-1,Math.floor((G.camX+BW)/TS)),r0=Math.max(0,Math.floor(G.camY/TS)),r1=ROWS-1;
- for(let c=c0;c<=c1;c++)for(let r=r0;r<=r1;r++){const t=LV.grid[r][c];if(t==='.')continue;const x=c*TS,y=r*TS;
+function drawTiles(){const T=LV.theme;const c0=Math.floor(G.camX/TS),c1=Math.floor((G.camX+BW)/TS),r0=Math.max(0,Math.floor(G.camY/TS)),r1=ROWS-1;
+ for(let c=c0;c<=c1;c++)for(let r=r0;r<=r1;r++){const t=(c<0||c>=LV.w)?'X':LV.grid[r][c];if(t==='.')continue;const x=c*TS,y=r*TS;
   switch(t){
   case '#':{const top=!SOLID.has(tileAt(c,r-1))&&tileAt(c,r-1)!=='w';R(x,y,16,16,T.dirt);for(let i=0;i<4;i++){const hx=hash(c*4+i,r)*14|0,hy=hash(c,r*4+i)*14|0;R(x+hx,y+hy,2,2,T.dirt2)}
    if(top){R(x,y,16,4,T.grass);R(x,y+4,16,1,T.grass2);for(let i=0;i<16;i+=3)if(hash(c*16+i,r)>0.5)R(x+i,y-1,1,1,T.grass)}break}
@@ -1059,7 +1086,7 @@ function drawControls(){const footMode=LV&&LV.L.foot;
  ctx.fillStyle='#fff';const tri=(x,y,dx,dy)=>{ctx.beginPath();ctx.moveTo(x+dx*9,y+dy*9);ctx.lineTo(x-dy*8-dx*3,y+dx*8-dy*3);ctx.lineTo(x+dy*8-dx*3,y-dx*8-dy*3);ctx.closePath();ctx.fill()};
  tri(d.x,d.y-L*0.62,0,-1);tri(d.x,d.y+L*0.62,0,1);tri(d.x-L*0.62,d.y,-1,0);tri(d.x+L*0.62,d.y,1,0);
  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(d.x-a,d.y-L,a*2,L*2);ctx.strokeRect(d.x-L,d.y-a,L*2,a*2);
- for(const [k,B,col,lbl] of [['J',CTL.A,'#1f9d55','JUMP'],['A',CTL.B,'#2b6fd6',footMode?'KICK':'NECK']]){const on=IN[k];
+ for(const [k,B,col,lbl] of [['J',CTL.A,'#1f9d55','JUMP'],['A',CTL.B,'#2b6fd6','ACTION']]){const on=IN[k];
   ctx.beginPath();ctx.arc(B.x+3,B.y+4,B.r,0,7);ctx.fillStyle='rgba(0,0,0,.45)';ctx.fill();
   ctx.beginPath();ctx.arc(B.x,B.y+(on?2:0),B.r,0,7);ctx.fillStyle=on?'#ffd34d':col;ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
   txt(lbl,B.x,B.y+(on?2:0),Math.max(16,Math.min(19,B.r*0.46)),on?'#3a2410':'#fff')}
@@ -1091,9 +1118,9 @@ function drawTitle(){drawTitleScene();
  iconBtn(CTL.mute,'mute')}
 const HOW=[
  ['THE STORY',["Cackles the Hyena King has captured Gigi the giraffe!","Kelly walks Level 1 on foot to find a friend: Jinxy, a young giraffe, smaller than Gigi, with a short neck and brown patches.","From Level 2 on, Kelly rides Jinxy across the savanna to rescue Gigi. Collect the green gems!","Beat the game to unlock 2 BONUS rounds: save Peter from Big Tusk!"]],
- ['CONTROLS',["◀ ▶  walk   ▼  duck   ▲  aim up","JUMP: jump (hold for higher)","NECK: kick (on foot) or a quick head-whip (riding Jinxy)","Stomp hyenas and vultures. Never stomp porcupines!"]],
- ['JINXY\'S NECK MOVES',["Double-tap NECK: NECK RAM. Smashes bricks and any foe, even armored beetles.","Aim it: hold ▲ (up) or ▲+▶ (diagonal). In the air hold ▼ for a NECK POUND.","Double-tap JUMP near a hook: Jinxy bites it and SWINGS. ◀ ▶ pump, ▲ ▼ shorten/lengthen, JUMP lets go.","At a hook by a ledge, hold ▲ to pull up onto it."]],
- ['TONGUE & TIPS',["Near food, a double-tap shoots out Jinxy's tongue: leaves heal 1 heart, mangoes refill hearts, star fruit makes you SUPER.","Bumped while riding? Kelly falls off. Touch Jinxy to hop back on.","50 gems = 1 extra life. Flags are checkpoints.","Keys: arrows/WASD, Z or Space = JUMP, X = NECK, C = ram, V = grab, P = pause, M = sound."]]];
+ ['CONTROLS',["◀ ▶  walk   ▼  duck   ▲  aim up","JUMP: jump (hold for higher). That's all it does.","ACTION: every other move! It changes with what is near you.","On foot: tap ACTION to PUNCH, tap it twice fast to KICK. Stomp hyenas and vultures, never porcupines!"]],
+ ['ACTION ON JINXY',["Tap: a quick head-bonk. Double-tap: NECK RAM! It smashes bricks and any foe, even armored beetles.","Hold ▲ + ACTION: ram up. In the air, hold ▼ + ACTION: NECK POUND.","Near a sparkly hook, tap ACTION: Jinxy bites it and SWINGS. ◀ ▶ pump, ▲ ▼ shorter / longer, JUMP lets go. By a ledge, hold ▲ to pull up."]],
+ ['TONGUE & TIPS',["Near food, tap ACTION: Jinxy's tongue grabs it. Leaves heal 1 heart, mangoes refill hearts, star fruit makes you SUPER.","Bumped while riding? Kelly falls off. Touch Jinxy to hop back on.","50 gems = 1 extra life. Flags are checkpoints.","Keys: arrows/WASD, Z or Space = JUMP, X = ACTION, P = pause, M = sound."]]];
 function drawHow(){drawTitleScene();ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);
  const w=Math.min(W-24,600),x=(W-w)/2;const pg=HOW[howPage];const lines=[];for(const p of pg[1]){for(const l of wrap(p,w-36,17))lines.push(l);lines.push('')}
  const h=Math.min(H-SAFE.t-SAFE.b-24,lines.length*23+150);const y=Math.max(SAFE.t+12,(H-h)/2);panel(x,y,w,h);
