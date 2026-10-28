@@ -1227,4 +1227,4 @@ async function postNow(){if(!G)return;const F=x=>x==null?()=>undefined:typeof x=
   return show()}
 const api={init,postNow,syncBest,localBest,gameOver,submitQuiet,watch,show,close,isOpen:()=>open,get backend(){return REMOTE?REMOTE.name:'local'},_t:{cleanName,nameError,fmt,boardId,pid,keyOf}};
 window.PALB=api})();
-</script><script>PALB.init({"game": "kellys-giraffe-getaway", "title": "Kelly's Giraffe Getaway", "order": "desc", "unit": "pts", "min": 0, "max": 10000000, "boards": null, "watch": [{"when": "(state==='over'||state==='win')&&!!G", "score": "G.score"}]})</script><!--/lb--></body></html>
+</script><script>PALB.init({"game": "kellys-giraffe-getaway", "title": "Kelly's Giraffe Getaway", "order": "desc", "unit": "pts", "min": 0, "max": 10000000, "boards": null, "overTitle": "FINAL SCORE", "watch": [{"when": "state==='over'&&!!G&&!window.__QA", "score": "G.score"}, {"when": "state==='win'&&!!G&&!window.__QA&&(G.winF=G.winF||frame)>0&&frame-G.winF>150", "score": "G.score", "delay": 0}]})</script><!--/lb--></body></html>
