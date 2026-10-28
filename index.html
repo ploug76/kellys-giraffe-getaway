@@ -255,7 +255,7 @@ const LEVELS=[
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const buf=document.createElement('canvas'),b=buf.getContext('2d');
 const TS=16,ROWS=15,LPX=ROWS*TS,DTW=20,REACH=104,TREACH=74;
-let W=0,H=0,DPR=1,S=2,BW=208,BH=240,portrait=true,ctlH=0,gameH=0,SAFE={t:0,r:0,b:0,l:0};
+let BHF=240,W=0,H=0,DPR=1,S=2,BW=208,BH=240,portrait=true,ctlH=0,gameH=0,SAFE={t:0,r:0,b:0,l:0};
 let state='title',prevState='title',G=null,frame=0,menuBtns=[],howPage=0,selPage=0;
 const SK='kgg_save_v1';
 let save={best:0,reached:0,gems:{},muted:false,cont:null};
@@ -276,7 +276,7 @@ function layout(){
  ctlH=portrait?Math.round(clamp(H*0.25,180,250)+SAFE.b):0;
  gameH=H-ctlH;
  S=portrait?Math.min(W/176,gameH/240):Math.min(W/208,H/212);
- BW=Math.ceil(W/S);BH=Math.ceil(gameH/S);buf.width=BW;buf.height=BH;
+ BW=Math.ceil(W/S);BH=Math.ceil(gameH/S);BHF=Math.ceil(H/S)+1;buf.width=BW;buf.height=BHF;
  layoutCtl();
 }
 function checkLayout(){const [w,h]=viewSize();if(w!==W||h!==H||(window.devicePixelRatio||1)!==lastDPR)layout()}
@@ -891,11 +891,12 @@ function drawControls(){const footMode=LV&&LV.L.foot;
  ctx.globalAlpha=1}
 // ----- screens
 function cardTitle(s,y,size=30,col='#ffd34d'){txt(s,W/2,y,size,col,'center','bold',PIX)}
-function drawTitleScene(){const T=THEMES[0];OX=0;OY=0;const camY=LPX-BH;drawBG(frame*0.6,camY,T);
- const gy=BH-(portrait?40:28);for(let x=0;x<BW;x+=16){const sx=x-((frame*0.6)%16);b.fillStyle=T.dirt;b.fillRect(sx|0,gy,16,BH-gy);b.fillStyle=T.grass;b.fillRect(sx|0,gy,16,4);b.fillStyle=T.grass2;b.fillRect(sx|0,gy+4,16,1)}
+function drawTitleScene(){const T=THEMES[0];OX=0;OY=0;const keep=BH;BH=BHF;const camY=LPX-BH;drawBG(frame*0.6,camY,T);
+ const gy=BH-Math.round((SAFE.b+(portrait?26:20))/S)-16;for(let x=-16;x<BW+16;x+=16){const sx=x-((frame*0.6)%16);b.fillStyle=T.dirt;b.fillRect(sx|0,gy,16,BH-gy);b.fillStyle=T.grass;b.fillRect(sx|0,gy,16,4);b.fillStyle=T.grass2;b.fillRect(sx|0,gy+4,16,1)}
  const cx=Math.round(BW*0.5);drawGiraffe(cx,gy,1,GINNY,{walk:frame,head:{x:cx+7,y:gy-26+((frame>>3)%2)}});drawKelly(cx-4,gy-14,1,{seat:1});
  for(let i=0;i<5;i++){const x=((i*53+frame*0.6*-1)%BW+BW)%BW,y=gy-60-Math.sin(i*1.7)*16;b.fillStyle='#2ee05a';b.fillRect(x|0,y|0,6,4);b.fillStyle='#9affb0';b.fillRect((x+1)|0,(y-2)|0,4,2);b.fillStyle='#18b040';b.fillRect((x+2)|0,(y+4)|0,2,2)}
- blit();if(gameH<H){ctx.fillStyle=T.dirt;ctx.fillRect(0,BH*S-2,W,H-BH*S+2)}}
+ ctx.imageSmoothingEnabled=false;ctx.drawImage(buf,0,0,BW,BH,0,0,BW*S,BH*S);BH=keep;TITLE_GY=gy*S}
+let TITLE_GY=0;
 function blit(){ctx.imageSmoothingEnabled=false;ctx.drawImage(buf,0,0,BW,BH,0,0,BW*S,BH*S)}
 function drawTitle(){drawTitleScene();
  const lw=!portrait&&W>H;const cxT=lw?W*0.3:W/2;
@@ -904,7 +905,7 @@ function drawTitle(){drawTitleScene();
  t1("KELLY'S",ty,big*0.62,'#ff7ac8');t1('GIRAFFE',ty+big*0.9,big,'#5fe05a');t1('GETAWAY',ty+big*1.85,big,'#ffd34d');
  kPortrait(cxT,ty+big*2.3+46,40);
  txt('Rescue Gigi the giraffe!',cxT,ty+big*2.3+104,18,'#fff');
- const bw=Math.min(300,(lw?W*0.4:W-48)),bh=54;const bx=lw?W*0.72-bw/2:(W-bw)/2;let by=lw?Math.max(SAFE.t+70,H*0.18):ty+big*2.3+130;
+ const bw=Math.min(300,(lw?W*0.4:W-48));let bh=54;if(!lw){const room=TITLE_GY-75-(ty+big*2.3+130);if(room<240){bh=Math.max(48,54-(240-room)/4)}}const bx=lw?W*0.72-bw/2:(W-bw)/2;let by=lw?Math.max(SAFE.t+70,H*0.18):ty+big*2.3+130;
  const c=save.cont;
  if(c&&(c.lvl>0||c.score>0)){button(bx,by,bw,bh,'▶ CONTINUE  LEVEL '+(c.lvl+1),'#1f9d55',()=>{AU.sfx('sel');G={score:c.score,lives:Math.max(3,c.lives),lvl:c.lvl,gemsTotal:0,gemBank:0};startLevel(c.lvl)});by+=bh+12;
   button(bx,by,bw,bh*0.9,'★ NEW GAME','#c2410c',()=>{AU.sfx('sel');newGame(0)});by+=bh*0.9+12}
@@ -926,11 +927,11 @@ function drawHow(){drawTitleScene();ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect
  const bw=(w-48)/2;button(x+16,y+h-66,bw,52,howPage?'◀ BACK':'◀ EXIT','#4a3f8a',()=>{AU.sfx('sel');if(howPage)howPage--;else state=prevState});
  button(x+32+bw,y+h-66,bw,52,howPage<HOW.length-1?'NEXT ▶':'GOT IT!','#1f9d55',()=>{AU.sfx('sel');if(howPage<HOW.length-1)howPage++;else state=prevState})}
 function drawLevels(){drawTitleScene();ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);
- const cols=W>=700?3:W>=380?2:1;const w=Math.min(W-24,cols*230+24),x=(W-w)/2;const rows=Math.ceil(LEVELS.length/cols);const bh=Math.min(64,Math.max(52,(H-SAFE.t-SAFE.b-170)/rows-10));
+ const cols=W>=700?3:W>=520?2:1;const w=Math.min(W-24,cols*230+24),x=(W-w)/2;const rows=Math.ceil(LEVELS.length/cols);const bh=Math.min(64,Math.max(52,(H-SAFE.t-SAFE.b-170)/rows-10));
  const h=rows*(bh+10)+140;const y=Math.max(SAFE.t+8,(H-h)/2);panel(x,y,w,h);cardTitle('CHOOSE A LEVEL',y+30,22);txt('All levels are open. Have fun!',W/2,y+58,16,'#ddd');
  const bw=(w-24-(cols-1)*10)/cols;
  LEVELS.forEach((L,i)=>{const c=i%cols,r=(i/cols)|0;const bx=x+12+c*(bw+10),by=y+76+r*(bh+10);const g=save.gems['L'+i];
-  button(bx,by,bw,bh,'','#2a4a7a',()=>{AU.sfx('sel');newGame(i)});txt((i+1)+'. '+L.name,bx+bw/2,by+bh*0.36,Math.min(17,bw/14+4),'#fff');txt(g!=null?'gems '+g:(i===0?'on foot':'riding Ginny'),bx+bw/2,by+bh*0.72,16,g!=null?'#7dff9a':'#bcd')});
+  button(bx,by,bw,bh,'','#2a4a7a',()=>{AU.sfx('sel');newGame(i)});{const s=(i+1)+'. '+L.name;let fs=17;ctx.font='bold 17px '+FONT;const mw=ctx.measureText(s).width;if(mw>bw-12)fs=Math.max(16,17*(bw-12)/mw);txt(s,bx+bw/2,by+bh*0.36,fs,'#fff')}txt(g!=null?'gems '+g:(i===0?'on foot':'riding Ginny'),bx+bw/2,by+bh*0.72,16,g!=null?'#7dff9a':'#bcd')});
  button(x+12,y+h-60,w-24,48,'◀ BACK','#4a3f8a',()=>{AU.sfx('sel');state=prevState})}
 function drawIntro(){const w=Math.min(W-24,460),h=196,x=(W-w)/2,y=portrait?Math.max(SAFE.t+86,gameH*0.3-h/2):Math.max(SAFE.t+60,(H-h)/2-30);ctx.globalAlpha=Math.min(1,G.introT/15);panel(x,y,w,h);
  kPortrait(x+56,y+70,40);txt('LEVEL '+(G.lvl+1),x+110,y+38,17,'#9fc3ff','left');txt(LV.L.name,x+110,y+68,Math.min(24,(w-120)/LV.L.name.length*1.9),'#ffd34d','left');
