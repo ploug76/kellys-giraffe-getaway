@@ -350,19 +350,16 @@ addEventListener('pageshow',()=>{layout()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='play')pauseGame();AU.suspend()}else{layout();AU.resume()}});
 
 // ===== controls =====
-const CTL={dpad:{x:0,y:0,r:0},A:{x:0,y:0,r:0},B:{x:0,y:0,r:0},mute:{x:0,y:0,w:44,h:44},pause:{x:0,y:0,w:44,h:44}};
+const CTL={A:{x:0,y:0,r:0},B:{x:0,y:0,r:0},mute:{x:0,y:0,w:44,h:44},pause:{x:0,y:0,w:44,h:44}};
 function layoutCtl(){
  const top=SAFE.t+8,rgt=W-SAFE.r-8;
  CTL.pause={x:rgt-48,y:top,w:48,h:48};CTL.mute={x:rgt-104,y:top,w:48,h:48};
  if(portrait){
-  const cy=H-SAFE.b-ctlH/2+SAFE.b/2+4;const r=clamp(Math.min(W*0.2,ctlH*0.36),56,84);
-  CTL.dpad={x:SAFE.l+16+r,y:cy,r};
+  const cy=H-SAFE.b-ctlH/2+SAFE.b/2+4;
   const br=clamp(W*0.105,36,46);
   CTL.A={x:W-SAFE.r-16-br,y:cy-br*0.45,r:br,lbl:'JUMP'};
   CTL.B={x:W-SAFE.r-16-br*3.3,y:cy+br*0.45,r:br,lbl:'ACTION'};
  }else{
-  const r=clamp(H*0.17,52,80);const cy=H-SAFE.b-r-14;
-  CTL.dpad={x:SAFE.l+18+r,y:cy,r};
   const br=clamp(H*0.11,36,46);
   CTL.A={x:W-SAFE.r-18-br,y:H-SAFE.b-br-16-br*0.5,r:br,lbl:'JUMP'};
   CTL.B={x:W-SAFE.r-18-br*3.3,y:H-SAFE.b-br-16+br*0.1,r:br,lbl:'ACTION'};
@@ -377,14 +374,16 @@ addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arro
  if(k==='enter'){menuKey()}});
 addEventListener('keyup',e=>{KEY[e.key.toLowerCase()]=0});
 addEventListener('blur',()=>{for(const k in KEY)KEY[k]=0;TOUCH.clear()});
-function zoneAt(x,y){
- const d=CTL.dpad;const dx=x-d.x,dy=y-d.y,dist=Math.hypot(dx,dy);const out={};
- if(portrait?(x<W*0.5&&y>gameH-10):(dist<d.r*1.45)){if(dist>d.r*0.2){const a=Math.atan2(dy,dx);const s=Math.round(a/(Math.PI/4));
-   // s: 0 R,1 DR,2 D,3 DL,4/-4 L,-3 UL,-2 U,-1 UR
-   if(s===0||s===1||s===-1)out.R=1;if(s===4||s===-4||s===3||s===-3)out.L=1;if(s===2||s===1||s===3)out.D=1;if(s===-2||s===-1||s===-3)out.U=1}
-  return out}
+// touch: JUMP/ACTION buttons on the right; everywhere else is swipe-to-move (no on-screen d-pad).
+// Swipe and hold: Kelly moves in the swipe direction while the finger stays down, stops on release.
+function zoneAt(x,y){const out={};
  const A=CTL.A,B=CTL.B;const da=Math.hypot(x-A.x,y-A.y),db=Math.hypot(x-B.x,y-B.y);
  if(portrait?(x>=W*0.5&&y>gameH-10):(Math.min(da,db)<A.r*1.6)){if(da<db)out.J=1;else out.A=1}
+ return out}
+const SWIPE_MIN=14;
+function swipeDir(dx,dy){const out={};if(Math.hypot(dx,dy)<SWIPE_MIN)return out;const a=Math.atan2(dy,dx);const s=Math.round(a/(Math.PI/4));
+ // s: 0 R,1 DR,2 D,3 DL,4/-4 L,-3 UL,-2 U,-1 UR
+ if(s===0||s===1||s===-1)out.R=1;if(s===4||s===-4||s===3||s===-3)out.L=1;if(s===2||s===1||s===3)out.D=1;if(s===-2||s===-1||s===-3)out.U=1;
  return out}
 function inBtn(r,x,y,p=4){return x>=r.x-p&&x<=r.x+r.w+p&&y>=r.y-p&&y<=r.y+r.h+p}
 let tapStart=null;
@@ -392,11 +391,12 @@ function onDown(id,x,y){AU.unlock();
  if(state==='play'){
   if(inBtn(CTL.pause,x,y)){pauseGame();return}
   if(inBtn(CTL.mute,x,y)){toggleMute();return}
-  const z=zoneAt(x,y);if(Object.keys(z).length||portrait&&y>gameH-10){TOUCH.set(id,{x,y,z});if(z.J)VIRT.J=Math.max(VIRT.J||0,1);if(z.A)VIRT.A=Math.max(VIRT.A||0,1);return}// a very quick tap still counts for one frame
+  const z=zoneAt(x,y);if(Object.keys(z).length){TOUCH.set(id,{x,y,z});if(z.J)VIRT.J=Math.max(VIRT.J||0,1);if(z.A)VIRT.A=Math.max(VIRT.A||0,1);return}// a very quick tap still counts for one frame
+  TOUCH.set(id,{x,y,ox:x,oy:y,sw:1,z:{}});// swipe-to-move touch
   if(state==='play'&&G&&G.signT>0)G.signDismiss=1;
   return}
  tapStart={x,y,id}}
-function onMove(id,x,y){const t=TOUCH.get(id);if(t){t.x=x;t.y=y;t.z=zoneAt(x,y);
+function onMove(id,x,y){const t=TOUCH.get(id);if(t){t.x=x;t.y=y;t.z=t.sw?swipeDir(x-t.ox,y-t.oy):zoneAt(x,y);
   // sliding from one face button onto the other presses it (NES thumb-roll)
  }}
 function onUp(id,x,y){if(TOUCH.has(id)){TOUCH.delete(id);return}
@@ -819,12 +819,12 @@ function levelClear(){if(G.cleared)return;G.cleared=true;state='clear';AU.music(
  save.cont={lvl:Math.min(LEVELS.length-1,G.lvl+1),score:G.score,lives:G.lives};persist()}
 function updateCam(snap){const p=P;const target=cxOf(p)-BW*(LV.L.chase?0.3:0.42)+p.f*18;G.camX=snap?target:G.camX+(target-G.camX)*0.12;
  const m=camMargins();if(LV.w*TS<=BW)G.camX=(LV.w*TS-BW)/2;else G.camX=clamp(G.camX,-m.l,LV.w*TS-BW+m.r);
- if(m.l||m.r)G.camX=clamp(G.camX,p.x+p.w+m.r-BW,p.x-m.l);// landscape: Kelly never sits under the d-pad or the buttons
+ if(m.l||m.r)G.camX=clamp(G.camX,p.x+p.w+m.r-BW,p.x-m.l);// landscape: Kelly never sits under the buttons
  const top=LPX-BH;if(top<=0)G.camY=top;else{const ty=clamp(cyOf(p)-BH*0.5,Math.min(0,p.y-40),top);G.camY=snap?ty:G.camY+(ty-G.camY)*0.15}}
-// landscape: the d-pad and the JUMP/ACTION buttons sit over the world, so the camera may show
+// landscape: the JUMP/ACTION buttons sit over the world, so the camera may show
 // a stone wall past each level edge; Kelly (and the start / goal) never hide under a button
-function camMargins(){if(portrait)return{l:0,r:0};const d=CTL.dpad,bl=Math.min(CTL.A.x-CTL.A.r,CTL.B.x-CTL.B.r);
- return{l:Math.max(0,(d.x+d.r+10-SAFE.l)/S),r:Math.max(0,(W-bl+10)/S)}}
+function camMargins(){if(portrait)return{l:0,r:0};const bl=Math.min(CTL.A.x-CTL.A.r,CTL.B.x-CTL.B.r);
+ return{l:0,r:Math.max(0,(W-bl+10)/S)}}
 function updatePlay(){G.time++;updatePlayer();if(state!=='play')return;updEnemies();updateCam();
  let near=null;for(const s of LV.signs)if(Math.abs(s.x+8-cxOf(P))<44&&Math.abs(s.y-P.y)<64)near=s;
  if(near){G.sign=near;G.signT=Math.min(G.signT+1,20)}else if(G.signT>0){G.signT--}
@@ -1077,15 +1077,8 @@ function drawHUD(){const x0=SAFE.l+8,y0=SAFE.t+8;
  for(const q of G.pops){const sx=(q.x-G.camX)*S,sy=(q.y-G.camY)*S;ctx.globalAlpha=Math.min(1,q.t/20);txt(q.txt,sx,sy,q.txt.length>6?18:16,q.txt.startsWith('+')?'#fff':'#ffe14d');ctx.globalAlpha=1}}
 function drawControls(){const footMode=LV&&LV.L.foot;
  if(portrait){const y=gameH;ctx.fillStyle='#211a2e';ctx.fillRect(0,y,W,H-y);ctx.fillStyle='#ffd34d';ctx.fillRect(0,y,W,3);ctx.fillStyle='#3a2f4a';ctx.fillRect(0,y+3,W,2)}
- const al=portrait?1:0.55;const d=CTL.dpad,a=d.r*0.62/2,L=d.r;ctx.globalAlpha=al;
- const held={L:IN.L,R:IN.R,U:IN.U,D:IN.D};
- ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(d.x-a+3,d.y-L+3,a*2,L*2);ctx.fillRect(d.x-L+3,d.y-a+3,L*2,a*2);
- ctx.fillStyle='#4a4458';ctx.fillRect(d.x-a,d.y-L,a*2,L*2);ctx.fillRect(d.x-L,d.y-a,L*2,a*2);
- const arm=(k,x,y,w,h)=>{if(held[k]){ctx.fillStyle='#ffd34d';ctx.fillRect(x,y,w,h)}};
- arm('U',d.x-a,d.y-L,a*2,L-a);arm('D',d.x-a,d.y+a,a*2,L-a);arm('L',d.x-L,d.y-a,L-a,a*2);arm('R',d.x+a,d.y-a,L-a,a*2);
- ctx.fillStyle='#fff';const tri=(x,y,dx,dy)=>{ctx.beginPath();ctx.moveTo(x+dx*9,y+dy*9);ctx.lineTo(x-dy*8-dx*3,y+dx*8-dy*3);ctx.lineTo(x+dy*8-dx*3,y-dx*8-dy*3);ctx.closePath();ctx.fill()};
- tri(d.x,d.y-L*0.62,0,-1);tri(d.x,d.y+L*0.62,0,1);tri(d.x-L*0.62,d.y,-1,0);tri(d.x+L*0.62,d.y,1,0);
- ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(d.x-a,d.y-L,a*2,L*2);ctx.strokeRect(d.x-L,d.y-a,L*2,a*2);
+ const al=portrait?1:0.55;ctx.globalAlpha=al;
+ if(portrait)txt('SWIPE TO MOVE',W*0.25,(gameH+H-SAFE.b)/2,15,'rgba(255,211,77,.55)');
  for(const [k,B,col,lbl] of [['J',CTL.A,'#1f9d55','JUMP'],['A',CTL.B,'#2b6fd6','ACTION']]){const on=IN[k];
   ctx.beginPath();ctx.arc(B.x+3,B.y+4,B.r,0,7);ctx.fillStyle='rgba(0,0,0,.45)';ctx.fill();
   ctx.beginPath();ctx.arc(B.x,B.y+(on?2:0),B.r,0,7);ctx.fillStyle=on?'#ffd34d':col;ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
@@ -1118,7 +1111,7 @@ function drawTitle(){drawTitleScene();
  iconBtn(CTL.mute,'mute')}
 const HOW=[
  ['THE STORY',["Cackles the Hyena King has captured Gigi the giraffe!","Kelly walks Level 1 on foot to find a friend: Jinxy, a young giraffe, smaller than Gigi, with a short neck and brown patches.","From Level 2 on, Kelly rides Jinxy across the savanna to rescue Gigi. Collect the green gems!","Beat the game to unlock 2 BONUS rounds: save Peter from Big Tusk!"]],
- ['CONTROLS',["◀ ▶  walk   ▼  duck   ▲  aim up","JUMP: jump (hold for higher). That's all it does.","ACTION: every other move! It changes with what is near you.","On foot: tap ACTION to PUNCH, tap it twice fast to KICK. Stomp hyenas and vultures, never porcupines!"]],
+ ['CONTROLS',["Swipe and hold anywhere to move: ◀ ▶ walk, ▼ duck, ▲ aim up. Let go to stop.","JUMP: jump (hold for higher). That's all it does.","ACTION: every other move! It changes with what is near you.","On foot: tap ACTION to PUNCH, tap it twice fast to KICK. Stomp hyenas and vultures, never porcupines!"]],
  ['ACTION ON JINXY',["Tap: a quick head-bonk. Double-tap: NECK RAM! It smashes bricks and any foe, even armored beetles.","Hold ▲ + ACTION: ram up. In the air, hold ▼ + ACTION: NECK POUND.","Near a sparkly hook, tap ACTION: Jinxy bites it and SWINGS. ◀ ▶ pump, ▲ ▼ shorter / longer, JUMP lets go. By a ledge, hold ▲ to pull up."]],
  ['TONGUE & TIPS',["Near food, tap ACTION: Jinxy's tongue grabs it. Leaves heal 1 heart, mangoes refill hearts, star fruit makes you SUPER.","Bumped while riding? Kelly falls off. Touch Jinxy to hop back on.","50 gems = 1 extra life. Flags are checkpoints.","Keys: arrows/WASD, Z or Space = JUMP, X = ACTION, P = pause, M = sound."]]];
 function drawHow(){drawTitleScene();ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);
