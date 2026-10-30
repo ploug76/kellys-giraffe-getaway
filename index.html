@@ -357,12 +357,13 @@ function layoutCtl(){
  if(portrait){
   const cy=H-SAFE.b-ctlH/2+SAFE.b/2+4;
   const br=clamp(W*0.105,36,46);
-  CTL.A={x:W-SAFE.r-16-br,y:cy-br*0.45,r:br,lbl:'JUMP'};
-  CTL.B={x:W-SAFE.r-16-br*3.3,y:cy+br*0.45,r:br,lbl:'ACTION'};
+  /* Oct 30: JUMP bottom-right, ACTION bottom-left (mirrored) */
+  CTL.A={x:W-SAFE.r-16-br,y:cy,r:br,lbl:'JUMP'};
+  CTL.B={x:SAFE.l+16+br,y:cy,r:br,lbl:'ACTION'};
  }else{
   const br=clamp(H*0.11,36,46);
-  CTL.A={x:W-SAFE.r-18-br,y:H-SAFE.b-br-16-br*0.5,r:br,lbl:'JUMP'};
-  CTL.B={x:W-SAFE.r-18-br*3.3,y:H-SAFE.b-br-16+br*0.1,r:br,lbl:'ACTION'};
+  CTL.A={x:W-SAFE.r-18-br,y:H-SAFE.b-br-16,r:br,lbl:'JUMP'};
+  CTL.B={x:SAFE.l+18+br,y:H-SAFE.b-br-16,r:br,lbl:'ACTION'};
  }
 }
 const KEY={},TOUCH=new Map(),VIRT={};let PAD={};
@@ -378,7 +379,7 @@ addEventListener('blur',()=>{for(const k in KEY)KEY[k]=0;TOUCH.clear()});
 // Swipe and hold: Kelly moves in the swipe direction while the finger stays down, stops on release.
 function zoneAt(x,y){const out={};
  const A=CTL.A,B=CTL.B;const da=Math.hypot(x-A.x,y-A.y),db=Math.hypot(x-B.x,y-B.y);
- if(portrait?(x>=W*0.5&&y>gameH-10):(Math.min(da,db)<A.r*1.6)){if(da<db)out.J=1;else out.A=1}
+ if(portrait?(y>gameH-10&&(x>=W*0.5||db<B.r*1.6)):(Math.min(da,db)<A.r*1.6)){if(da<db)out.J=1;else out.A=1}
  return out}
 const SWIPE_MIN=14;
 function swipeDir(dx,dy){const out={};if(Math.hypot(dx,dy)<SWIPE_MIN)return out;const a=Math.atan2(dy,dx);const s=Math.round(a/(Math.PI/4));
