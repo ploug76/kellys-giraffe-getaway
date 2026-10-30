@@ -855,7 +855,10 @@ function drawKelly(cx,bot,f,o={}){const t=bot-24;const walk=o.walk||0;const ph=M
  RF(cx,f,-4,t+11,8,7,'#1d1d24');RF(cx,f,-3,t+11,6,2,PK);RF(cx,f,-1,t+13,2,1,PK_D);
  const sw=(o.kick||o.punch)?0:(ph===1?1:ph===3?-1:0);
  if(o.punch){const e=o.punch;RF(cx,f,-5,t+12,2,5,'#1d1d24');RF(cx,f,-5,t+17,2,1,SKIN);RF(cx,f,3,t+12,e,2,'#1d1d24');RF(cx,f,3+e,t+11,3,3,SKIN);RF(cx,f,3+e,t+11,3,1,'#fff0e0')}
- else if(o.kick){RF(cx,f,3,t+12,5,2,'#1d1d24');RF(cx,f,8,t+12,1,2,SKIN)}else{RF(cx,f,-5+sw,t+12,2,5,'#1d1d24');RF(cx,f,-5+sw,t+17,2,1,SKIN);RF(cx,f,3-sw,t+12,2,5,'#2a2a32');RF(cx,f,3-sw,t+17,2,1,SKIN)}
+ else if(o.kick){RF(cx,f,3,t+12,5,2,'#1d1d24');RF(cx,f,8,t+12,1,2,SKIN)}else{/* arm check (Oct 30 2026; cadence: Kelly/Jinxy stride ~2.75 steps/s at full run, was ~7): pixel arms are upper arm + forearm; the forward-swinging forearm bends up at the elbow, the back one reaches back; opposite the legs, same stride phase */
+ const parm=(x0,v,col)=>{if(v>0){RF(cx,f,x0+1,t+12,2,3,col);RF(cx,f,x0+2,t+14,2,2,col);RF(cx,f,x0+3,t+13,1,1,SKIN);RF(cx,f,x0+4,t+14,1,1,SKIN)}else if(v<0){RF(cx,f,x0-1,t+12,2,3,col);RF(cx,f,x0-2,t+15,2,2,col);RF(cx,f,x0-2,t+17,2,1,SKIN)}else{RF(cx,f,x0,t+12,2,5,col);RF(cx,f,x0,t+17,2,1,SKIN)}};
+ const av=(o.ph!==undefined&&!o.air)?(()=>{const z=-Math.sin(o.ph)*(o.amp||0);return z>0.45?1:z<-0.45?-1:0})():sw;
+ parm(-5,av,'#1d1d24');parm(3,-av,'#2a2a32')}
  if(seat){RF(cx,f,-1,t+18,6,3,'#3a5a9a');RF(cx,f,3,t+20,2,4,'#3a5a9a');RF(cx,f,3,t+24,3,2,'#6a3a18');return}
  // legs (jeans) + boots
  let l1=0,l2=0;if(o.air){l1=-1;l2=1}else if(walk){l1=ph===1?-2:ph===3?2:0;l2=-l1}
@@ -924,14 +927,14 @@ function drawPlayer(){const p=P;if(p.inv>0&&(p.inv>>2)%2&&state==='play')return;
  if(p.super>0&&(frame>>2)%2){b.globalAlpha=0.8}
  if(p.ride){const hd=headPos(p);let tongueTo=null;if(p.tongue){const e=p.tongue.e;tongueTo=p.tongue.t<=9?{x:hd.x+(cxOf(e)-hd.x)*p.tongue.t/9,y:hd.y+(cyOf(e)-hd.y)*p.tongue.t/9}:{x:cxOf(e),y:cyOf(e)}}
   const pal=p.super>0?{...JINXY,body:['#eec98a','#ffe040','#ffb0d8','#a0e0ff'][(frame>>3)%4]}:JINXY;
-  lgG(p,p.x,p.ground&&!p.swing);drawGiraffe(cx,bot,p.f,pal,{walk:moving?p.anim:0,ph:p._wd*0.143,amp:p._ga,air:!p.ground&&!p.swing,crouch:p.crouch,head:hd,tongueTo,chomp:!!p.swing});
+  lgG(p,p.x,p.ground&&!p.swing);drawGiraffe(cx,bot,p.f,pal,{walk:moving?p.anim:0,ph:p._wd*0.0628,amp:p._ga,air:!p.ground&&!p.swing,crouch:p.crouch,head:hd,tongueTo,chomp:!!p.swing});
   drawKelly(cx-p.f*3,bot-12,p.f,{seat:1,walk:0,kick:false})}
  else{const atk=p.whipT>0?p.atk:'';const ph=p.whipT>0?(p.whipMax||14)-p.whipT:0;
-  lgG(p,p.x,p.ground&&!atk);drawKelly(cx,bot,p.f,{walk:moving&&!atk?p.anim:0,ph:p._wd*0.165,amp:atk?0:p._ga,air:!p.ground,punch:atk==='punch'?(ph<2?2:ph<7?7:4):0,kick:atk==='kick',kickLeg:atk==='kick'&&ph>=2&&ph<13});
+  lgG(p,p.x,p.ground&&!atk);drawKelly(cx,bot,p.f,{walk:moving&&!atk?p.anim:0,ph:p._wd*0.0628,amp:atk?0:p._ga,air:!p.ground,punch:atk==='punch'?(ph<2?2:ph<7?7:4):0,kick:atk==='kick',kickLeg:atk==='kick'&&ph>=2&&ph<13});
   if(atk&&ph>=3&&ph<=6){const fx=cx+p.f*(atk==='punch'?16:15),fy=bot-(atk==='punch'?11:5);R(fx-1,fy-3,2,2,'#fff');R(fx+2,fy-1,2,2,'#fff');R(fx-1,fy+2,2,2,'#fff');R(fx-4,fy-1,2,2,'#fff')}}
  b.globalAlpha=1;
  if(p.super>0&&frame%3===0)G.parts.push({x:cx+rnd(-8,8),y:p.y+rnd(0,p.h),vx:0,vy:-0.5,t:14,col:['#fff060','#ff70c0','#60d0ff'][frame%3],g:0,s:2})}
-function drawJinxyNPC(gi){const moving=Math.abs(gi.vx)>0.2;if(gi.scared>0&&(frame>>3)%2)R(cxOf(gi)-1,gi.y-12,2,5,'#fff');drawGiraffe(cxOf(gi),gi.y+gi.h,gi.f||1,JINXY,{walk:moving?gi.t*2:0})}
+function drawJinxyNPC(gi){const moving=Math.abs(gi.vx)>0.2;if(gi.scared>0&&(frame>>3)%2)R(cxOf(gi)-1,gi.y-12,2,5,'#fff');drawGiraffe(cxOf(gi),gi.y+gi.h,gi.f||1,JINXY,{walk:moving?gi.t*(Math.abs(gi.vx)>1?.46:.29):0})}
 // ----- tiles & background
 function drawBG(camX,camY,T){T=T||(LV?LV.theme:THEMES[0]);const sky=T.sky;const h3=BH/3;
  for(let i=0;i<3;i++){b.fillStyle=sky[i];b.fillRect(0,Math.round(i*h3),BW,Math.ceil(h3)+1)}
@@ -966,7 +969,7 @@ function drawTiles(){const T=LV.theme;const c0=Math.floor(G.camX/TS),c1=Math.flo
  for(const a of LV.anchors){if(a.x<G.camX-16||a.x>G.camX+BW+16)continue;const x=a.x,y=a.y;R(x-6,y-2,12,4,'#7a4a1e');R(x-6,y-2,12,1,'#a8703a');R(x-2,y-4,4,8,'#5a3410');R(x-1,y-3,2,2,'#c89050');
   R(x+4,y-6,5,3,'#4cba3a');R(x-9,y-5,4,3,'#3ea02c');if(P&&P.ride&&!P.swing&&Math.hypot(a.x-cxOf(P),a.y-cyOf(P))<REACH&&a.y<cyOf(P)-6&&(frame>>3)%2){R(x-8,y-8,2,2,'#fff');R(x+7,y-8,2,2,'#fff');R(x-8,y+6,2,2,'#fff');R(x+7,y+6,2,2,'#fff')}}}
 function drawEnt(e){const x=e.x,y=e.y,cx=cxOf(e),f=e.dir||-1;
- if(!e._gw)lgG(e,e.x,!(e.stun>0));const GA=e._gw?e._gw[1]:e._ga||0,GP=e._gw?e._gw[0]:(e._wd||0)*0.42,GS=(po,k)=>Math.round(Math.sin(GP+po)*k*GA),GL=po=>GA>0.35&&Math.cos(GP+po)>0.35?1:0;
+ if(!e._gw)lgG(e,e.x,!(e.stun>0));const GA=e._gw?e._gw[1]:e._ga||0,GP=e._gw?e._gw[0]:(e._wd||0)*({hyena:.241,porc:.287}[e.type]||.42),GS=(po,k)=>Math.round(Math.sin(GP+po)*k*GA),GL=po=>GA>0.35&&Math.cos(GP+po)>0.35?1:0;
  switch(e.type){
  case 'gem':{const bob=Math.sin((frame+e.id*9)*0.08)*1.5;const yy=y+bob;R(x+3,yy,4,2,'#9affb0');R(x+1,yy+2,8,4,'#2ee05a');R(x+2,yy+6,6,3,'#18b040');R(x+4,yy+9,2,2,'#0e8a30');R(x+2,yy+2,2,2,'#e8fff0');if((frame+e.id*13)%50<6)R(x+8,yy-1,1,3,'#fff');break}
  case 'leaf':{R(x+6,y-2,2,4,'#6a4a1e');R(x,y+2,14,7,'#3ea02c');R(x+2,y+1,10,2,'#5fd04a');R(x+1,y+8,5,3,'#2e8a1e');R(x+8,y+8,5,3,'#2e8a1e');R(x+3,y+3,2,1,'#a8f080');break}
@@ -996,7 +999,7 @@ function drawEnt(e){const x=e.x,y=e.y,cx=cxOf(e),f=e.dir||-1;
   R(x+8,yy+12,28,8,'#8a5a2a');R(x+8,yy+12,28,2,'#a87038');R(x+8,yy+19,28,1,'#5a3410');
   for(const wx of[x+13,x+31]){R(wx-3,yy+19,7,7,'#3a2a1a');R(wx-1,yy+21,3,3,(frame>>2)%2?'#c89050':'#8a5a2a')}
   R(x+36,yy+14,8,1,'#c8a070');
-  lgG(e,e.x,e.spd>0);drawEnt({type:'hyena',x:x+44,y:yy+12,w:14,h:12,dir:1,t:e.spd>0?frame*2:0,id:e.id,_gw:[(e._wd||0)*0.42,e._ga||0]});break}
+  lgG(e,e.x,e.spd>0);drawEnt({type:'hyena',x:x+44,y:yy+12,w:14,h:12,dir:1,t:e.spd>0?frame*2:0,id:e.id,_gw:[(e._wd||0)*0.241,e._ga||0]});break}
  case 'hyena':{const w=(e.t>>3)%2;R(x+1,y+3,12,6,'#b8a070');R(x+3,y+4,2,2,'#6a5030');R(x+8,y+5,2,2,'#6a5030');RF(cx,f,-9,y,6,6,'#b8a070');RF(cx,f,-11,y+3,3,3,'#d0b888');RF(cx,f,-8,y+1,1,1,'#000');RF(cx,f,-10,y+5,3,1,'#fff');RF(cx,f,-6,y-2,2,2,'#6a5030');
   RF(cx,f,5,y+2,3,2,'#6a5030');[[2,0],[10,0],[5,Math.PI],[8,Math.PI]].forEach(([lx,po])=>{R(x+lx,y+9,2,1,'#8a7050');R(x+lx+GS(po,1.6),y+10-GL(po),2,2,'#8a7050')});break}
  case 'beetle':{R(x+1,y+2,12,7,'#2a3aa0');R(x+2,y+1,10,2,'#4a6ae0');R(x+4,y+2,3,2,'#c0d0ff');R(x+7,y+1,1,8,'#1a2060');RF(cx,f,-9,y+4,3,4,'#1a1a3a');RF(cx,f,-11,y+2,2,2,'#1a1a3a');[[2,0],[6,Math.PI],[10,0]].forEach(([fx,po])=>R(x+fx+GS(po,1.4),y+9-GL(po),2,1,'#000'));if(e.clang>0)R(x+5,y-5,4,3,'#fff');break}
@@ -1095,7 +1098,7 @@ function drawControls(){const footMode=LV&&LV.L.foot;
 function cardTitle(s,y,size=30,col='#ffd34d'){txt(s,W/2,y,size,col,'center','bold',PIX)}
 function drawTitleScene(){const T=THEMES[0];OX=0;OY=0;const keep=BH;BH=BHF;const camY=LPX-BH;drawBG(frame*0.6,camY,T);
  const gy=BH-Math.round((SAFE.b+(portrait?26:20))/S)-16;for(let x=-16;x<BW+16;x+=16){const sx=x-((frame*0.6)%16);b.fillStyle=T.dirt;b.fillRect(sx|0,gy,16,BH-gy);b.fillStyle=T.grass;b.fillRect(sx|0,gy,16,4);b.fillStyle=T.grass2;b.fillRect(sx|0,gy+4,16,1)}
- const cx=Math.round(BW*0.5);drawGiraffe(cx,gy,1,JINXY,{walk:frame,head:{x:cx+GHD.x,y:gy-GHD.y+((frame>>3)%2)}});drawKelly(cx-3,gy-12,1,{seat:1});
+ const cx=Math.round(BW*0.5);drawGiraffe(cx,gy,1,JINXY,{walk:frame*0.29,head:{x:cx+GHD.x,y:gy-GHD.y+((frame>>3)%2)}});drawKelly(cx-3,gy-12,1,{seat:1});
  for(let i=0;i<5;i++){const x=((i*53+frame*0.6*-1)%BW+BW)%BW,y=gy-60-Math.sin(i*1.7)*16;b.fillStyle='#2ee05a';b.fillRect(x|0,y|0,6,4);b.fillStyle='#9affb0';b.fillRect((x+1)|0,(y-2)|0,4,2);b.fillStyle='#18b040';b.fillRect((x+2)|0,(y+4)|0,2,2)}
  ctx.imageSmoothingEnabled=false;ctx.drawImage(buf,0,0,BW,BH,0,0,BW*S,BH*S);BH=keep;TITLE_GY=gy*S}
 let TITLE_GY=0;
