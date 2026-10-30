@@ -564,10 +564,13 @@ function respawn(){spawnPlayer(G.cpPos,!LV.L.foot);G.hearts=3;P.inv=120;state='p
  for(const e of LV.ents)if(e.isBoss&&e.alive){e.hp=e.maxhp;e.phase=1;e.x=e.x0;e.y=e.y0;e.bs='idle';e.bt=90;e.active=false;e.dizzy=0}
  for(const e of LV.ents)if(e.type==='rock'){e.y=e.y0;e.rs='wait';e.rt=30;e.vy=0}
  G.proj=[];updateCam(true)}
-function pitFall(){if(state!=='play')return;const p=P;
+/* respawn fix (Oct 30): blinking pit falls are free; respawn backs up onto solid ground */
+function rfBackK(s,fx){const w=P.w||14,r=Math.floor((s.y+31)/TS),ok=x=>{if(x<0)return false;for(let c=Math.floor(x/TS);c<=Math.floor((x+w-.01)/TS);c++){if(!isSolid(c,r)||isSolid(c,r-1)||isSolid(c,r-2)||tileAt(c,r-1)==='^')return false}return true},d=Math.sign(fx-s.x)||1;let ex=s.x;for(let i=0;i<80;i++){if(!ok(ex+d*2))break;ex+=d*2}const need=w*2,dist=Math.abs(ex-s.x);if(ok(s.x)&&dist>=need)return s;for(let k=Math.max(0,need-dist);k<TS*24;k+=2){if(ok(s.x-d*k)&&ok(s.x-d*k-d*w))return {x:s.x-d*k,y:s.y}}return s}
+function pitFall(){if(state!=='play')return;const p=P;const bl=p.inv>0,inv0=p.inv,sp=rfBackK(p.safe,p.x);
+ if(bl){const ride=p.ride||(!!G.jinxy&&!LV.L.foot);spawnPlayer(sp,ride);P.inv=Math.max(inv0,60);G.jinxy=null;return}
  G.hearts--;AU.sfx('hurt');
  if(G.hearts<=0){loseLife();return}
- const ride=p.ride||(!!G.jinxy&&!LV.L.foot);spawnPlayer(p.safe,ride);P.inv=120;G.jinxy=null}
+ const ride=p.ride||(!!G.jinxy&&!LV.L.foot);spawnPlayer(sp,ride);P.inv=120;G.jinxy=null}
 
 // ===== player update =====
 function updatePlayer(){const p=P;p.anim++;if(p.inv>0)p.inv--;if(p.super>0)p.super--;if(p.noGrabT>0)p.noGrabT--;else p.noGrab=null;
