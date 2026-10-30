@@ -838,6 +838,8 @@ const GN='#45c84a',GN_D='#25902e',GN_L='#a8f09a',PK='#ff5fbf',PK_D='#d0308f';
 let OX=0,OY=0;// camera offset for buf drawing
 function R(x,y,w,h,c){b.fillStyle=c;b.fillRect(Math.round(x-OX),Math.round(y-OY),w,h)}
 function RF(cx,f,dx,y,w,h,c){R(f>0?cx+dx:cx-dx-w,y,w,h,c)} // mirrored by facing
+/* leg check (Grey Heart, Oct 2026): stride from distance actually moved; amplitude eases so legs settle to standing */
+function lgG(o,x,ok){const d=Math.abs(x-(o._lx===undefined?x:o._lx));o._lx=x;const mv=ok&&d>0.05&&d<12;o._wd=(o._wd||0)+(mv?d:0);o._ga=(o._ga||0)+((mv?1:0)-(o._ga||0))*0.18;if(!mv&&o._ga<0.03)o._ga=0;return o}
 function drawKelly(cx,bot,f,o={}){const t=bot-24;const walk=o.walk||0;const ph=Math.floor(walk/6)%4;
  const seat=o.seat;
  // hair (big copper curls)
@@ -858,6 +860,8 @@ function drawKelly(cx,bot,f,o={}){const t=bot-24;const walk=o.walk||0;const ph=M
  // legs (jeans) + boots
  let l1=0,l2=0;if(o.air){l1=-1;l2=1}else if(walk){l1=ph===1?-2:ph===3?2:0;l2=-l1}
  if(o.kickLeg){RF(cx,f,-3,t+18,3,4,'#3a5a9a');RF(cx,f,-3,t+22,3,2,'#6a3a18');RF(cx,f,1,t+18,7,3,'#3a5a9a');RF(cx,f,8,t+18,2,3,'#6a3a18');return}
+ if(o.ph!==undefined&&!o.air){const a=o.amp||0;[[-3,0,'#3a5a9a','#6a3a18'],[1,Math.PI,'#34528c','#5a3010']].forEach(([lx,po,c1,c2])=>{const q=o.ph+po,sw=Math.round(Math.sin(q)*2.4*a),lf=a>0.35&&Math.cos(q)>0.35?1:0;
+  RF(cx,f,lx+Math.round(sw/2),t+18,3,2,c1);RF(cx,f,lx+sw,t+20-lf,3,2,c1);RF(cx,f,lx+sw,t+22-lf,3,2,c2)});return}
  RF(cx,f,-3+l1,t+18,3,4,'#3a5a9a');RF(cx,f,-3+l1,t+22,3,2,'#6a3a18');RF(cx,f,1+l2,t+18,3,4,'#34528c');RF(cx,f,1+l2,t+22,3,2,'#5a3010')}
 function neckLine(x0,y0,x1,y1,col,dots,mane,step){step=step||6;const d=Math.hypot(x1-x0,y1-y0),n=Math.max(1,Math.ceil(d));const px=-(y1-y0)/(d||1),py=(x1-x0)/(d||1);
  for(let i=0;i<=n;i++){const k=i/n,x=x0+(x1-x0)*k,y=y0+(y1-y0)*k;R(x-2,y-2,5,5,col);if(mane&&i%2===0)R(x-2+px*-3*Math.sign(py||1),y-2,2,2,mane)}
@@ -893,6 +897,8 @@ function giraffeBody(cx,bot,f,pal,o={}){const walk=o.walk||0,ph=Math.floor(walk/
  const tx=sm?-9:-11;RF(cx,f,tx,by+1,2,1,pal.dark);RF(cx,f,tx-1,by+2,1,sm?3:4,pal.dark);RF(cx,f,tx-2,by+(sm?4:5),2,2,pal.tuft||pal.dark);
  // legs (shorter on young Jinxy)
  const L=sm?[[-6,0],[-4,2],[2,1],[4,3]]:[[-8,0],[-5,2],[3,1],[6,3]];L.forEach(([lx,k],i)=>{let off=0;if(o.air)off=i%2?-1:1;else if(walk)off=((ph+k)%4<2)?1:-1;const lh=sm?(o.crouch?5:7):(o.crouch?6:8);
+  if(o.ph!==undefined&&!o.air){const a=o.amp||0,q=o.ph+k*Math.PI/2,sw=Math.round(Math.sin(q)*2.2*a),lf=a>0.35&&Math.cos(q)>0.4?1:0,u=Math.ceil(lh*0.4),m=Math.floor((lh-u)/2),col=i%2?pal.dark:pal.leg;
+   RF(cx,f,lx,bot-lh,2,u,col);RF(cx,f,lx+Math.round(sw/2),bot-lh+u-lf,2,m+1,col);RF(cx,f,lx+sw,bot-lh+u+m-lf,2,lh-u-m-1,col);RF(cx,f,lx+sw,bot-1-lf,2,1,pal.hoof);return}
   RF(cx,f,lx+off,bot-lh,2,lh-1,i%2?pal.dark:pal.leg);RF(cx,f,lx+off,bot-1,2,1,pal.hoof)});
  // body
  if(sm){RF(cx,f,-8,by,15,7,pal.body);RF(cx,f,-7,by-1,12,1,pal.body);RF(cx,f,-7,by+7,13,1,pal.dark)}
@@ -918,10 +924,10 @@ function drawPlayer(){const p=P;if(p.inv>0&&(p.inv>>2)%2&&state==='play')return;
  if(p.super>0&&(frame>>2)%2){b.globalAlpha=0.8}
  if(p.ride){const hd=headPos(p);let tongueTo=null;if(p.tongue){const e=p.tongue.e;tongueTo=p.tongue.t<=9?{x:hd.x+(cxOf(e)-hd.x)*p.tongue.t/9,y:hd.y+(cyOf(e)-hd.y)*p.tongue.t/9}:{x:cxOf(e),y:cyOf(e)}}
   const pal=p.super>0?{...JINXY,body:['#eec98a','#ffe040','#ffb0d8','#a0e0ff'][(frame>>3)%4]}:JINXY;
-  drawGiraffe(cx,bot,p.f,pal,{walk:moving?p.anim:0,air:!p.ground&&!p.swing,crouch:p.crouch,head:hd,tongueTo,chomp:!!p.swing});
+  lgG(p,p.x,p.ground&&!p.swing);drawGiraffe(cx,bot,p.f,pal,{walk:moving?p.anim:0,ph:p._wd*0.143,amp:p._ga,air:!p.ground&&!p.swing,crouch:p.crouch,head:hd,tongueTo,chomp:!!p.swing});
   drawKelly(cx-p.f*3,bot-12,p.f,{seat:1,walk:0,kick:false})}
  else{const atk=p.whipT>0?p.atk:'';const ph=p.whipT>0?(p.whipMax||14)-p.whipT:0;
-  drawKelly(cx,bot,p.f,{walk:moving&&!atk?p.anim:0,air:!p.ground,punch:atk==='punch'?(ph<2?2:ph<7?7:4):0,kick:atk==='kick',kickLeg:atk==='kick'&&ph>=2&&ph<13});
+  lgG(p,p.x,p.ground&&!atk);drawKelly(cx,bot,p.f,{walk:moving&&!atk?p.anim:0,ph:p._wd*0.165,amp:atk?0:p._ga,air:!p.ground,punch:atk==='punch'?(ph<2?2:ph<7?7:4):0,kick:atk==='kick',kickLeg:atk==='kick'&&ph>=2&&ph<13});
   if(atk&&ph>=3&&ph<=6){const fx=cx+p.f*(atk==='punch'?16:15),fy=bot-(atk==='punch'?11:5);R(fx-1,fy-3,2,2,'#fff');R(fx+2,fy-1,2,2,'#fff');R(fx-1,fy+2,2,2,'#fff');R(fx-4,fy-1,2,2,'#fff')}}
  b.globalAlpha=1;
  if(p.super>0&&frame%3===0)G.parts.push({x:cx+rnd(-8,8),y:p.y+rnd(0,p.h),vx:0,vy:-0.5,t:14,col:['#fff060','#ff70c0','#60d0ff'][frame%3],g:0,s:2})}
@@ -960,6 +966,7 @@ function drawTiles(){const T=LV.theme;const c0=Math.floor(G.camX/TS),c1=Math.flo
  for(const a of LV.anchors){if(a.x<G.camX-16||a.x>G.camX+BW+16)continue;const x=a.x,y=a.y;R(x-6,y-2,12,4,'#7a4a1e');R(x-6,y-2,12,1,'#a8703a');R(x-2,y-4,4,8,'#5a3410');R(x-1,y-3,2,2,'#c89050');
   R(x+4,y-6,5,3,'#4cba3a');R(x-9,y-5,4,3,'#3ea02c');if(P&&P.ride&&!P.swing&&Math.hypot(a.x-cxOf(P),a.y-cyOf(P))<REACH&&a.y<cyOf(P)-6&&(frame>>3)%2){R(x-8,y-8,2,2,'#fff');R(x+7,y-8,2,2,'#fff');R(x-8,y+6,2,2,'#fff');R(x+7,y+6,2,2,'#fff')}}}
 function drawEnt(e){const x=e.x,y=e.y,cx=cxOf(e),f=e.dir||-1;
+ if(!e._gw)lgG(e,e.x,!(e.stun>0));const GA=e._gw?e._gw[1]:e._ga||0,GP=e._gw?e._gw[0]:(e._wd||0)*0.42,GS=(po,k)=>Math.round(Math.sin(GP+po)*k*GA),GL=po=>GA>0.35&&Math.cos(GP+po)>0.35?1:0;
  switch(e.type){
  case 'gem':{const bob=Math.sin((frame+e.id*9)*0.08)*1.5;const yy=y+bob;R(x+3,yy,4,2,'#9affb0');R(x+1,yy+2,8,4,'#2ee05a');R(x+2,yy+6,6,3,'#18b040');R(x+4,yy+9,2,2,'#0e8a30');R(x+2,yy+2,2,2,'#e8fff0');if((frame+e.id*13)%50<6)R(x+8,yy-1,1,3,'#fff');break}
  case 'leaf':{R(x+6,y-2,2,4,'#6a4a1e');R(x,y+2,14,7,'#3ea02c');R(x+2,y+1,10,2,'#5fd04a');R(x+1,y+8,5,3,'#2e8a1e');R(x+8,y+8,5,3,'#2e8a1e');R(x+3,y+3,2,1,'#a8f080');break}
@@ -989,11 +996,11 @@ function drawEnt(e){const x=e.x,y=e.y,cx=cxOf(e),f=e.dir||-1;
   R(x+8,yy+12,28,8,'#8a5a2a');R(x+8,yy+12,28,2,'#a87038');R(x+8,yy+19,28,1,'#5a3410');
   for(const wx of[x+13,x+31]){R(wx-3,yy+19,7,7,'#3a2a1a');R(wx-1,yy+21,3,3,(frame>>2)%2?'#c89050':'#8a5a2a')}
   R(x+36,yy+14,8,1,'#c8a070');
-  drawEnt({type:'hyena',x:x+44,y:yy+12,w:14,h:12,dir:1,t:e.spd>0?frame*2:0,id:e.id});break}
+  lgG(e,e.x,e.spd>0);drawEnt({type:'hyena',x:x+44,y:yy+12,w:14,h:12,dir:1,t:e.spd>0?frame*2:0,id:e.id,_gw:[(e._wd||0)*0.42,e._ga||0]});break}
  case 'hyena':{const w=(e.t>>3)%2;R(x+1,y+3,12,6,'#b8a070');R(x+3,y+4,2,2,'#6a5030');R(x+8,y+5,2,2,'#6a5030');RF(cx,f,-9,y,6,6,'#b8a070');RF(cx,f,-11,y+3,3,3,'#d0b888');RF(cx,f,-8,y+1,1,1,'#000');RF(cx,f,-10,y+5,3,1,'#fff');RF(cx,f,-6,y-2,2,2,'#6a5030');
-  RF(cx,f,5,y+2,3,2,'#6a5030');R(x+2,y+9,2,3-w,'#8a7050');R(x+10,y+9,2,2+w,'#8a7050');R(x+5,y+9,2,2+w,'#8a7050');R(x+8,y+9,2,3-w,'#8a7050');break}
- case 'beetle':{R(x+1,y+2,12,7,'#2a3aa0');R(x+2,y+1,10,2,'#4a6ae0');R(x+4,y+2,3,2,'#c0d0ff');R(x+7,y+1,1,8,'#1a2060');RF(cx,f,-9,y+4,3,4,'#1a1a3a');RF(cx,f,-11,y+2,2,2,'#1a1a3a');const w=(e.t>>3)%2;R(x+2,y+9,2,1,'#000');R(x+6+w,y+9,2,1,'#000');R(x+10,y+9,2,1,'#000');if(e.clang>0)R(x+5,y-5,4,3,'#fff');break}
- case 'porc':{R(x+1,y+4,12,7,'#7a5a3a');for(let i=0;i<6;i++){R(x+1+i*2,y+(i%2),1,5,'#f0e8d0');R(x+1+i*2,y,1,1,'#202020')}RF(cx,f,-8,y+6,3,3,'#c09070');RF(cx,f,-9,y+7,1,1,'#000');R(x+3,y+10,2,1,'#3a2a1a');R(x+9,y+10,2,1,'#3a2a1a');break}
+  RF(cx,f,5,y+2,3,2,'#6a5030');[[2,0],[10,0],[5,Math.PI],[8,Math.PI]].forEach(([lx,po])=>{R(x+lx,y+9,2,1,'#8a7050');R(x+lx+GS(po,1.6),y+10-GL(po),2,2,'#8a7050')});break}
+ case 'beetle':{R(x+1,y+2,12,7,'#2a3aa0');R(x+2,y+1,10,2,'#4a6ae0');R(x+4,y+2,3,2,'#c0d0ff');R(x+7,y+1,1,8,'#1a2060');RF(cx,f,-9,y+4,3,4,'#1a1a3a');RF(cx,f,-11,y+2,2,2,'#1a1a3a');[[2,0],[6,Math.PI],[10,0]].forEach(([fx,po])=>R(x+fx+GS(po,1.4),y+9-GL(po),2,1,'#000'));if(e.clang>0)R(x+5,y-5,4,3,'#fff');break}
+ case 'porc':{R(x+1,y+4,12,7,'#7a5a3a');for(let i=0;i<6;i++){R(x+1+i*2,y+(i%2),1,5,'#f0e8d0');R(x+1+i*2,y,1,1,'#202020')}RF(cx,f,-8,y+6,3,3,'#c09070');RF(cx,f,-9,y+7,1,1,'#000');R(x+3+GS(0,1.4),y+10-GL(0),2,1,'#3a2a1a');R(x+9+GS(Math.PI,1.4),y+10-GL(Math.PI),2,1,'#3a2a1a');break}
  case 'vulture':{const fl=(e.t>>3)%2;R(x+4,y+3,8,5,'#4a3020');R(x+5,y+8,2,2,'#e8c040');RF(cx,f,-9,y+1,3,3,'#e89090');RF(cx,f,-10,y+2,2,1,'#d0a040');RF(cx,f,-8,y+1,1,1,'#000');R(x+2,y+3,10,1,'#f0e0d0');
   if(fl){R(x-2,y-3,7,4,'#3a2414');R(x+11,y-3,7,4,'#3a2414')}else{R(x-3,y+4,7,3,'#3a2414');R(x+12,y+4,7,3,'#3a2414')}break}
  case 'monkey':{R(x+2,y+4,8,8,'#7a4a24');R(x+3,y,6,6,'#7a4a24');R(x+4,y+2,4,3,'#e0b890');R(x+4,y+2,1,1,'#000');R(x+7,y+2,1,1,'#000');R(x+1,y+1,2,2,'#e0b890');R(x+9,y+1,2,2,'#e0b890');R(x+10,y+9,3,1,'#7a4a24');R(x+12,y+6,1,4,'#7a4a24');
