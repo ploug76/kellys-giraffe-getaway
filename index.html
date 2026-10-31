@@ -355,15 +355,14 @@ function layoutCtl(){
  const top=SAFE.t+8,rgt=W-SAFE.r-8;
  CTL.pause={x:rgt-48,y:top,w:48,h:48};CTL.mute={x:rgt-104,y:top,w:48,h:48};
  if(portrait){
-  const cy=H-SAFE.b-ctlH/2+SAFE.b/2+4;
-  const br=clamp(W*0.105,36,46);
-  /* Oct 30: JUMP bottom-right, ACTION bottom-left (mirrored) */
-  CTL.A={x:W-SAFE.r-16-br,y:cy,r:br,lbl:'JUMP'};
-  CTL.B={x:SAFE.l+16+br,y:cy,r:br,lbl:'ACTION'};
+  /* Peter Oct 30 9:40 PM: cluster like his screenshot - JUMP big orange far bottom-right, ACTION smaller green up-left of it */
+  const ph=H-gameH-SAFE.b,big=Math.round(clamp(ph*0.36,92,124)),sm=Math.round(big*0.84),bot=Math.round(clamp(ph*0.14,18,46))+SAFE.b,ra=big/2,rb=sm/2;
+  CTL.A={x:W-SAFE.r-16-ra,y:H-bot-ra,r:ra,lbl:'JUMP'};
+  CTL.B={x:W-SAFE.r-16-big-14-rb,y:Math.max(gameH+10+rb,H-bot-big*0.42-rb),r:rb,lbl:'ACTION'};
  }else{
-  const br=clamp(H*0.11,36,46);
-  CTL.A={x:W-SAFE.r-18-br,y:H-SAFE.b-br-16,r:br,lbl:'JUMP'};
-  CTL.B={x:SAFE.l+18+br,y:H-SAFE.b-br-16,r:br,lbl:'ACTION'};
+  const big=Math.round(clamp(H*0.21,72,96)),sm=Math.round(big*0.82),ra=big/2,rb=sm/2;
+  CTL.A={x:W-SAFE.r-14-ra,y:H-SAFE.b-12-ra,r:ra,lbl:'JUMP'};
+  CTL.B={x:W-SAFE.r-14-big-10-rb,y:H-SAFE.b-12-big*0.18-rb,r:rb,lbl:'ACTION'};
  }
 }
 const KEY={},TOUCH=new Map(),VIRT={};let PAD={};
@@ -379,7 +378,7 @@ addEventListener('blur',()=>{for(const k in KEY)KEY[k]=0;TOUCH.clear()});
 // Swipe and hold: Kelly moves in the swipe direction while the finger stays down, stops on release.
 function zoneAt(x,y){const out={};
  const A=CTL.A,B=CTL.B;const da=Math.hypot(x-A.x,y-A.y),db=Math.hypot(x-B.x,y-B.y);
- if(portrait?(y>gameH-10&&(x>=W*0.5||db<B.r*1.6)):(Math.min(da,db)<A.r*1.6)){if(da<db)out.J=1;else out.A=1}
+ if(portrait?(y>gameH-10&&(da<A.r*1.6||db<B.r*1.6)):(Math.min(da,db)<A.r*1.6)){if(da<db)out.J=1;else out.A=1}
  return out}
 const SWIPE_MIN=14;
 function swipeDir(dx,dy){const out={};if(Math.hypot(dx,dy)<SWIPE_MIN)return out;const a=Math.atan2(dy,dx);const s=Math.round(a/(Math.PI/4));
@@ -1095,8 +1094,8 @@ function drawControls(){const footMode=LV&&LV.L.foot;
  if(portrait)txt('SWIPE TO MOVE',W*0.25,(gameH+H-SAFE.b)/2,15,'rgba(255,211,77,.55)');
  for(const [k,B,col,lbl] of [['J',CTL.A,'#1f9d55','JUMP'],['A',CTL.B,'#2b6fd6','ACTION']]){const on=IN[k];
   ctx.beginPath();ctx.arc(B.x+3,B.y+4,B.r,0,7);ctx.fillStyle='rgba(0,0,0,.45)';ctx.fill();
-  ctx.beginPath();ctx.arc(B.x,B.y+(on?2:0),B.r,0,7);ctx.fillStyle=on?'#ffd34d':col;ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
-  txt(lbl,B.x,B.y+(on?2:0),Math.max(16,Math.min(19,B.r*0.46)),on?'#3a2410':'#fff')}
+  ctx.beginPath();ctx.arc(B.x,B.y+(on?2:0),B.r,0,7);{const _g=ctx.createRadialGradient(B.x-B.r*.3,B.y-B.r*.4,B.r*.1,B.x,B.y,B.r);if(k==='J'){_g.addColorStop(0,'#ffe0b0');_g.addColorStop(.55,'#ff8a1a');_g.addColorStop(1,'#a03a00')}else{_g.addColorStop(0,'#d8ffd0');_g.addColorStop(.55,'#38b040');_g.addColorStop(1,'#0a5a12')}ctx.fillStyle=_g};ctx.fill();if(on){ctx.fillStyle='rgba(255,255,255,.25)';ctx.fill()}ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
+  ctx.font='900 '+(Math.round(B.r*(k==='J'?0.56:0.4)))+'px '+FONT;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=Math.max(3,(Math.round(B.r*(k==='J'?0.56:0.4)))*0.22);ctx.strokeStyle='#000';ctx.strokeText(lbl,B.x,B.y+(on?2:0));ctx.fillStyle='#fff';ctx.fillText(lbl,B.x,B.y+(on?2:0))}
  ctx.globalAlpha=1}
 // ----- screens
 function cardTitle(s,y,size=30,col='#ffd34d'){txt(s,W/2,y,size,col,'center','bold',PIX)}
