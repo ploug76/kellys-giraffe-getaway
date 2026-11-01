@@ -618,10 +618,9 @@ function whip(){const p=P;if(p.ramT||p.tongue||p.whipT)return;p.whipT=p.whipMax=
 function action(){const p=P;const dbl=frame-p.lastA<=DTW;p.lastA=dbl?-99:frame;
  if(!p.ride){footAttack(dbl);return}
  if(p.tongue||p.ramT)return;
+ const hk=findHook();if(hk){grabHook(hk);return}/* Peter Oct 31 11:11 PM: ACTION near a hook always grabs it, ground or air, no aiming */
  if(IN.D&&!p.ground){special();return}
- const hk=findHook();if(hk&&!p.ground){grabHook(hk);return}
  if(tryTongue())return;
- if(hk&&!foeClose(p)){grabHook(hk);return}
  if(IN.U||dbl){special();return}
  whip()}
 function footAttack(dbl){const p=P;
@@ -670,14 +669,15 @@ function eat(e){e.alive=false;const x=cxOf(e),y=cyOf(e);AU.sfx('munch');G.eaten=
  else if(e.type==='mango'){addScore(250,x,y);G.hearts=3}
  else if(e.type==='star'){addScore(500,x,y);P.super=480;AU.sfx('power');G.pops.push({x,y:y-12,t:70,txt:'SUPER!'})}}
 // the nearest bite-hook in reach (the same hooks that sparkle on screen)
-function findHook(){const p=P;if(p.swing||!p.ride)return null;const cx=cxOf(p),cy=cyOf(p);let best=null,bs=1e9;const dir=(IN.R?1:0)-(IN.L?1:0);
- for(const a of LV.anchors){if(a===p.noGrab)continue;const dx=a.x-cx,dy=a.y-cy;if(dy>-6)continue;const d=Math.hypot(dx,dy);if(d>REACH)continue;
-  let sc=d;if(dir&&Math.sign(dx)===dir)sc-=30;if(!dir&&Math.sign(dx)===p.f)sc-=10;if(sc<bs){bs=sc;best=a}}
+/* easy grab: the nearest hook within GRAB_R of the head OR body, any direction, facing and stick ignored */
+const GRAB_R=Math.round(REACH*1.5);
+function findHook(){const p=P;if(p.swing||!p.ride)return null;const cx=cxOf(p),cy=cyOf(p),m=mouth(p);let best=null,bs=GRAB_R;
+ for(const a of LV.anchors){if(a===p.noGrab)continue;const d=Math.min(Math.hypot(a.x-cx,a.y-cy),Math.hypot(a.x-m.x,a.y-m.y));if(d<bs){bs=d;best=a}}
  return best}
 function grabHook(best){const p=P;p.ramT=0;p.pound=false;const cx=cxOf(p),cy=cyOf(p);
- const dx=cx-best.x,dy=cy-best.y,d=Math.hypot(dx,dy);const L=clamp(d,34,REACH);const th=Math.atan2(dx,dy);
+ const dx=cx-best.x,dy=cy-best.y,d=Math.hypot(dx,dy);const L=clamp(d,34,REACH);const th=clamp(Math.atan2(dx,dy),-2.4,2.4);
  const om=(p.vx*Math.cos(th)-p.vy*Math.sin(th))/L;
- p.swing={a:best,L,th,om,t:0};p.vx=p.vy=0;p.whipT=0;G.grabs=(G.grabs||0)+1;AU.sfx('grab');G.parts.push({x:best.x,y:best.y,vx:0,vy:0,t:10,col:'#fff',g:0,s:3})}
+ p.swing={a:best,L,th,om:clamp(om,-0.16,0.16),t:0,fx:p.x,fy:p.y};p.vx=p.vy=0;p.whipT=0;G.grabs=(G.grabs||0)+1;AU.sfx('grab');G.parts.push({x:best.x,y:best.y,vx:0,vy:0,t:10,col:'#fff',g:0,s:3})}
 // V key (old shortcut): hook, else tongue, else a reach
 function neckGrab(){const p=P;if(p.swing||p.tongue||!p.ride)return;const hk=findHook();if(hk){grabHook(hk);return}
  if(tryTongue())return;const dir=(IN.R?1:0)-(IN.L?1:0);
@@ -690,7 +690,8 @@ function updSwing(){const p=P,s=p.swing;s.t++;const g=0.34;
  const oth=s.th;s.th=clamp(s.th+s.om,-2.4,2.4);if(Math.abs(s.th)===2.4)s.om*=-0.3;
  let nx=s.a.x+s.L*Math.sin(s.th)-p.w/2,ny=s.a.y+s.L*Math.cos(s.th)-p.h/2;
  if(boxHits(nx,ny,p.w,p.h)){s.th=oth;s.om*=-0.35;nx=s.a.x+s.L*Math.sin(s.th)-p.w/2;ny=s.a.y+s.L*Math.cos(s.th)-p.h/2}
- if(!boxHits(nx,ny,p.w,p.h)){p.x=nx;p.y=ny}
+ if(s.fx!==undefined&&s.t<=10){const k=s.t/10,e=1-Math.pow(1-k,3);p.x=s.fx+(nx-s.fx)*e;p.y=s.fy+(ny-s.fy)*e}/* smooth neck tween onto the hook */
+ else if(!boxHits(nx,ny,p.w,p.h)){p.x=nx;p.y=ny}
  if(Math.abs(s.om)>0.004)p.f=s.om>0?1:-1;
  if(IN.U&&s.L<=32){for(const sd of [p.f,-p.f]){for(const rr of [s.a.r,s.a.r+1]){const c=s.a.c+sd;const t=tileAt(c,rr);
    if((SOLID.has(t)||t==='=')&&!isSolid(c,rr-1)&&!isSolid(c,rr-2)){const tx=c*TS+(sd>0?1:TS-p.w-1),ty=rr*TS-p.h;
@@ -970,7 +971,7 @@ function drawTiles(){const T=LV.theme;const c0=Math.floor(G.camX/TS),c1=Math.flo
   }}
  // bite hooks
  for(const a of LV.anchors){if(a.x<G.camX-16||a.x>G.camX+BW+16)continue;const x=a.x,y=a.y;R(x-6,y-2,12,4,'#7a4a1e');R(x-6,y-2,12,1,'#a8703a');R(x-2,y-4,4,8,'#5a3410');R(x-1,y-3,2,2,'#c89050');
-  R(x+4,y-6,5,3,'#4cba3a');R(x-9,y-5,4,3,'#3ea02c');if(P&&P.ride&&!P.swing&&Math.hypot(a.x-cxOf(P),a.y-cyOf(P))<REACH&&a.y<cyOf(P)-6&&(frame>>3)%2){R(x-8,y-8,2,2,'#fff');R(x+7,y-8,2,2,'#fff');R(x-8,y+6,2,2,'#fff');R(x+7,y+6,2,2,'#fff')}}}
+  R(x+4,y-6,5,3,'#4cba3a');R(x-9,y-5,4,3,'#3ea02c');if(P&&P.ride&&!P.swing&&Math.hypot(a.x-cxOf(P),a.y-cyOf(P))<GRAB_R&&(frame>>3)%2){R(x-8,y-8,2,2,'#fff');R(x+7,y-8,2,2,'#fff');R(x-8,y+6,2,2,'#fff');R(x+7,y+6,2,2,'#fff')}}}
 function drawEnt(e){const x=e.x,y=e.y,cx=cxOf(e),f=e.dir||-1;
  if(!e._gw)lgG(e,e.x,!(e.stun>0));const GA=e._gw?e._gw[1]:e._ga||0,GP=e._gw?e._gw[0]:(e._wd||0)*({hyena:.241,porc:.287}[e.type]||.42),GS=(po,k)=>Math.round(Math.sin(GP+po)*k*GA),GL=po=>GA>0.35&&Math.cos(GP+po)>0.35?1:0;
  switch(e.type){
